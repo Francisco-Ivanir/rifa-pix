@@ -1,0 +1,131 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 15px;
+}
+
+h1, h3 {
+  text-align: center;
+}
+
+/* GRADE — agora ocupa melhor a tela */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.number {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 0;
+  text-align: center;
+  font-weight: bold;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.number.selected {
+  background: #1fa64a;
+  color: #fff;
+}
+
+.number.sold {
+  background: #999;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.reserved {
+  background: #c62825;
+  color: #fff;
+}
+
+.pending {
+  background: #f9a825;
+  color: #000;
+}
+
+.paid {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.cart {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: #000;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+}
+
+.modal img {
+  width: 160px;
+}
+
+.input, textarea {
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.copy {
+  background: #1fa64a;
+  color: #fff;
+}
+
+.close {
+  background: #444;
+  color: #fff;
+  margin-top: 15px;
+}
+
+.pix-warning {
+  background: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.error {
+  color: #c00;
+  font-size: 14px;
+  display: none;
+}
+

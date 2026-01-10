@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifa Pix de R$ 50</title>
+
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🎟️ Rifa PIX de R$ 50</h1>
+<div class="grid" id="grid"></div>
+
+<div class="cart" onclick="openModal()">
+  🛒 <span id="count">0</span> | R$ <span id="total">0,00</span>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+
+    <h3>Pagamento via Pix</h3>
+
+    <div id="buyerForm">
+      <p><strong>Identificação do comprador</strong></p>
+
+      <input type="text" id="buyerName" placeholder="Nome (obrigatório)" class="input">
+      <input type="tel" id="buyerPhone" placeholder="WhatsApp (obrigatório)" class="input">
+
+      <button class="copy" onclick="confirmBuyer()">Continuar para pagamento</button>
+
+      <p id="formError" class="error">
+        Informe seu WhatsApp para continuar.
+      </p>
+    </div>
+
+    <div id="paymentArea" style="display:none;">
+
+      <p><strong>Total a pagar:</strong> R$ <span id="modalTotal">0,00</span></p>
+
+      <div class="pix-warning">
+        ⚠️ O valor do Pix deve ser digitado manualmente conforme o total.
+      </div>
+
+      <img src="qrcode.png" alt="QR Code Pix">
+
+      <textarea id="pix" readonly>
+00020126580014br.gov.bcb.pix013615d0557a-2ef4-4187-9fd9-c4c4c985c76c5204000053039865802BR5901N6001C62090505648266304DCF2</textarea>
+
+
+      <button class="copy" onclick="copyPix()">📋 Copiar Pix</button>
+    </div>
+
+    <p>
+      Envie o comprovante para:<br>
+      <strong>WhatsApp (21) 98203-4341</strong>
+    </p>
+
+    <button class="close" onclick="closeModal()">Fechar</button>
+
+  </div>
+</div>
+
+<hr>
+
+<h3>🔒 Painel do Organizador</h3>
+<button
+  onclick="resetRaffle()"
+  style="background:#c62828;color:#fff;padding:10px;border:none;border-radius:8px;width:100%;margin-bottom:10px;"
+>
+  🧨 Resetar rifa
+</button>
+
+<button id="adminBtn" onclick="openAdmin()">
+  🔒 Área do administrador
+</button>
+
+<div id="panel" style="display:none;"></div>
+
+
+<!-- JavaScript externo -->
+<script src="script.js"></script>
+
+</body>
+</html>
