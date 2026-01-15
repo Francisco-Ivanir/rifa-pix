@@ -135,6 +135,13 @@ function openModal() {
 
   modalTotal.innerText =
     (selected.length * price).toFixed(2).replace(".", ",");
+const phoneInput = document.getElementById("buyerPhone");
+if (phoneInput) {
+  const phone = phoneInput.value.replace(/\D/g, "");
+  if (phone.length >= 10) {
+    updateLimitCounter(phone);
+  }
+}
 
   modal.style.display = "flex";
 }
@@ -443,48 +450,52 @@ function checkExpiredPendings() {
   const now = Date.now();
   let changed = false;
 
-  raffleData = raffleData.filter(item => {
-    if (item.status !== "pending") return true;
+  raffleData.forEach(item => {
+    if (item.status !== "pending") return;
 
-    if (now - item.time > PENDING_TIME) {
-      // libera número
+    const remaining = PENDING_TIME - (now - item.time);
+
+    // ⛔ Ainda NÃO expirou
+    if (remaining > 0) {
       const el = document.querySelector(
         `[data-number="${item.number}"]`
       );
 
       if (el) {
-  el.classList.remove("pending");
-  el.innerHTML = item.number;
-  el.onclick = () => toggle(el, item.number);
-}
+        el.innerHTML = `
+          ${item.number}<br>
+          <small>⏳ ${formatTime(remaining)}</small>
+        `;
+      }
 
-      changed = true;
-      return false; // remove do array
+      return;
     }
-if (item.status === "pending") {
-  const el = document.querySelector(
-    `[data-number="${item.number}"]`
-  );
 
-  if (el) {
-    const remaining =
-      PENDING_TIME - (now - item.time);
+    // ✅ Expirou agora
+    item.status = "expired";
+    changed = true;
 
-    el.innerHTML = `
-      ${item.number}<br>
-      <small>⏳ ${formatTime(remaining)}</small>
-    `;
-  }
-}
+    const el = document.querySelector(
+      `[data-number="${item.number}"]`
+    );
 
-    return true;
+    if (el) {
+      el.classList.remove("pending");
+      el.innerHTML = item.number;
+      el.onclick = () => toggle(el, item.number);
+    }
   });
 
+  // 🧹 Remove expirados somente depois
   if (changed) {
+    raffleData = raffleData.filter(
+      item => item.status !== "expired"
+    );
     saveData();
     renderPanel();
   }
 }
+
 
 function formatTime(ms) {
   const totalSeconds = Math.max(0, Math.floor(ms / 1000));
