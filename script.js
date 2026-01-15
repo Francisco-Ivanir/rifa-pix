@@ -185,11 +185,6 @@ function maskWhatsApp(input) {
   }
 }
 
-const phone = input.value.replace(/\D/g, "");
-if (phone.length >= 10) {
-  updateLimitWarning(phone);
-  updateLimitCounter(phone);
-}
 
 function countNumbersByPhone(phone) {
   return raffleData.filter(item =>
