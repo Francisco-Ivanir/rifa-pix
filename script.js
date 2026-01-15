@@ -1,6 +1,8 @@
 const grid = document.getElementById("grid");
 const price = 0.75;
 const ownerWhatsApp = "5521982034341";
+const MAX_PER_PHONE = 5;
+
 const ADMIN_PASSWORD = "1234";
 let adminUnlocked = false;
 const PENDING_TIME = 30 * 60 * 1000; // 30 minutos
@@ -73,6 +75,28 @@ for (let i = 0; i < 100; i++) {
 function toggle(el, n) {
   if (raffleData.find(item => item.number === n)) return;
 
+  // WhatsApp digitado (se existir)
+  const phoneRaw = buyerPhone ? buyerPhone.value.trim() : "";
+  const phone = phoneRaw.replace(/\D/g, "");
+
+  // quantidade já usada por esse WhatsApp
+  let already = 0;
+  if (phone.length >= 10) {
+    already = countNumbersByPhone(phone);
+  }
+
+  // bloqueio antecipado
+  if (!selected.includes(n)) {
+    if (already + selected.length >= MAX_PER_PHONE) {
+      alert(
+        `⚠️ Limite atingido.\n` +
+        `Máximo de ${MAX_PER_PHONE} números por WhatsApp.`
+      );
+      return;
+    }
+  }
+
+  // seleção normal
   if (selected.includes(n)) {
     selected = selected.filter(x => x !== n);
     el.classList.remove("selected");
@@ -83,6 +107,15 @@ function toggle(el, n) {
 
   updateCart();
 }
+
+const phoneInput = document.getElementById("buyerPhone");
+if (phoneInput) {
+  const phone = phoneInput.value.replace(/\D/g, "");
+  if (phone.length >= 10) {
+    updateLimitCounter(phone);
+  }
+}
+
 
 function updateCart() {
   count.innerText = selected.length;
@@ -108,6 +141,11 @@ function openModal() {
 
 function closeModal() {
   modal.style.display = "none";
+const warning = document.getElementById("limitWarning");
+if (warning) warning.style.display = "none";
+const counter = document.getElementById("limitCounter");
+if (counter) counter.style.display = "none";
+
 }
 
 function copyPix() {
@@ -124,16 +162,90 @@ function copyPix() {
    CONFIRMAÇÃO
 ========================= */
 
-function confirmBuyer() {
-  const name = buyerName.value.trim();
-  const phone = buyerPhone.value.trim();
+function maskWhatsApp(input) {
+  let value = input.value.replace(/\D/g, "");
 
-  if (!phone) {
-    document.getElementById("formError").style.display = "block";
+  if (value.length > 11) {
+    value = value.slice(0, 11);
+  }
+
+  if (value.length > 6) {
+    input.value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+  } else if (value.length > 2) {
+    input.value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+  } else if (value.length > 0) {
+    input.value = `(${value}`;
+  }
+}
+
+const phone = input.value.replace(/\D/g, "");
+if (phone.length >= 10) {
+  updateLimitWarning(phone);
+  updateLimitCounter(phone);
+}
+
+function countNumbersByPhone(phone) {
+  return raffleData.filter(item =>
+    item.phone === phone &&
+    (item.status === "pending" || item.status === "paid")
+  ).length;
+}
+
+function updateLimitWarning(phone) {
+  const warning = document.getElementById("limitWarning");
+  if (!warning) return;
+
+  const already = countNumbersByPhone(phone);
+  const remaining = MAX_PER_PHONE - already;
+
+  if (remaining <= 0) {
+    warning.style.display = "none";
     return;
   }
 
-  // 🔒 cria cópia segura dos dados
+  warning.innerText =
+    `⚠️ Você pode escolher mais ${remaining} número(s).`;
+
+  warning.style.display = "block";
+}
+
+function updateLimitCounter(phone) {
+  const counter = document.getElementById("limitCounter");
+  if (!counter) return;
+
+  const already = countNumbersByPhone(phone);
+  const totalSelected = selected.length;
+
+  counter.innerText =
+    `📊 Você selecionou ${already + totalSelected} de ${MAX_PER_PHONE} números`;
+
+  counter.style.display = "block";
+}
+
+
+function confirmBuyer() {
+  const name = buyerName.value.trim();
+  const phoneRaw = buyerPhone.value.trim();
+  const phone = phoneRaw.replace(/\D/g, "");
+
+  if (phone.length < 10 || phone.length > 11) {
+    alert("📱 Informe um WhatsApp válido (DDD + número).");
+    buyerPhone.focus();
+    return;
+  }
+
+  const alreadyTaken = countNumbersByPhone(phone);
+  const tryingToTake = selected.length;
+
+  if (alreadyTaken + tryingToTake > MAX_PER_PHONE) {
+    alert(
+      `❌ Limite excedido.\n\n` +
+      `Você já possui ${alreadyTaken} número(s).\n` +
+      `Máximo permitido: ${MAX_PER_PHONE}.`
+    );
+    return;
+  }
+
   const chosenNumbers = [...selected];
   const totalValue = chosenNumbers.length * price;
 
@@ -416,5 +528,4 @@ function confirmFromUrl() {
   // limpa URL
   window.history.replaceState({}, document.title, window.location.pathname);
 }
-
 
