@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rifa Pix de R$ 50</title>
-
   <!-- CSS externo -->
   <link rel="stylesheet" href="style.css">
 </head>
@@ -27,7 +26,41 @@
       <p><strong>Identificação do comprador</strong></p>
 
       <input type="text" id="buyerName" placeholder="Nome (obrigatório)" class="input">
-      <input type="tel" id="buyerPhone" placeholder="WhatsApp (obrigatório)" class="input">
+      <input type="tel" id="buyerPhone" placeholder="WhatsApp (obrigatório)" class="input"
+oninput="maskWhatsApp(this)"
+>
+
+
+<div
+  id="limitWarning"
+  style="
+    display:none;
+    background:#fff3cd;
+    color:#856404;
+    padding:10px;
+    border-radius:8px;
+    font-size:14px;
+    margin-bottom:10px;
+    text-align:center;
+  "
+>
+</div>
+
+<div
+  id="limitCounter"
+  style="
+    display:none;
+    background:#e3f2fd;
+    color:#0d47a1;
+    padding:10px;
+    border-radius:8px;
+    font-size:14px;
+    margin-bottom:10px;
+    text-align:center;
+    font-weight:bold;
+  "
+>
+</div>
 
       <button class="copy" onclick="confirmBuyer()">Continuar para pagamento</button>
 
@@ -35,6 +68,7 @@
         Informe seu WhatsApp para continuar.
       </p>
     </div>
+
 
     <div id="paymentArea" style="display:none;">
 
@@ -84,4 +118,4 @@
 <script src="script.js"></script>
 
 </body>
-</html>
+  </html>
