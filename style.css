@@ -38,6 +38,36 @@ h1, h3 {
   cursor: not-allowed;
 }
 
+#pix {
+  user-select: all;
+  cursor: pointer;
+}
+
+.pix-title {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.pix-amount {
+  font-size: 32px;
+  font-weight: bold;
+  color: #1fa64a;
+  margin: 10px 0 15px 0;
+}
+
+.pix-qrcode {
+  width: 180px;
+  margin: 10px auto;
+  display: block;
+}
+
+#pix {
+  width: 90%;
+  height: 70px;
+  font-size: 14px;
+  resize: none;
+}
+
 .reserved {
   background: #c62825;
   color: #fff;
@@ -79,7 +109,15 @@ h1, h3 {
   padding: 20px;
   width: 90%;
   max-width: 350px;
+
+max-height: 90vh;
+overflow-y: auto;
+
   text-align: center;
+}
+
+.modal-content {
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal img {
@@ -127,4 +165,22 @@ button {
   color: #c00;
   font-size: 14px;
   display: none;
+}
+
+.pix-steps {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 15px;
+  color: #777;
+}
+
+.pix-steps span {
+  flex: 1;
+  text-align: center;
+}
+
+.pix-steps .active {
+  color: #1fa64a;
+  font-weight: bold;
 }
