@@ -20,84 +20,69 @@
 <div class="modal" id="modal">
   <div class="modal-content">
 
-    <h3>Pagamento via Pix</h3>
+    <!-- TÍTULO -->
+    <h3 class="pix-title">💸 Pagamento via Pix</h3>
 
+<div class="pix-steps">
+  <span class="active">1️⃣ Identificação</span>
+  <span>2️⃣ Pagamento</span>
+  <span>3️⃣ Comprovante</span>
+</div>
+
+    <!-- VALOR -->
+    <div class="pix-amount">
+      R$ <span id="modalTotal">0,00</span>
+    </div>
+
+    <!-- FORMULÁRIO -->
     <div id="buyerForm">
       <p><strong>Identificação do comprador</strong></p>
 
-      <input type="text" id="buyerName" placeholder="Nome (obrigatório)" class="input">
-      <input type="tel" id="buyerPhone" placeholder="WhatsApp (obrigatório)" class="input"
-oninput="maskWhatsApp(this)"
->
+      <input type="text" id="buyerName" class="input" placeholder="Nome (obrigatório)">
+      <input type="tel" id="buyerPhone" class="input"
+        placeholder="WhatsApp (obrigatório)"
+        oninput="maskWhatsApp(this)"
+      >
 
+      <div id="limitWarning" class="pix-warning" style="display:none;"></div>
+      <div id="limitCounter" class="pix-warning" style="display:none;"></div>
 
-<div
-  id="limitWarning"
-  style="
-    display:none;
-    background:#fff3cd;
-    color:#856404;
-    padding:10px;
-    border-radius:8px;
-    font-size:14px;
-    margin-bottom:10px;
-    text-align:center;
-  "
->
-</div>
-
-<div
-  id="limitCounter"
-  style="
-    display:none;
-    background:#e3f2fd;
-    color:#0d47a1;
-    padding:10px;
-    border-radius:8px;
-    font-size:14px;
-    margin-bottom:10px;
-    text-align:center;
-    font-weight:bold;
-  "
->
-</div>
-
-      <button class="copy" onclick="confirmBuyer()">Continuar para pagamento</button>
-
-      <p id="formError" class="error">
-        Informe seu WhatsApp para continuar.
-      </p>
+      <button class="copy" onclick="confirmBuyer()">
+        Continuar para pagamento
+      </button>
     </div>
 
-
+    <!-- PAGAMENTO -->
     <div id="paymentArea" style="display:none;">
 
-      <p><strong>Total a pagar:</strong> R$ <span id="modalTotal">0,00</span></p>
-
       <div class="pix-warning">
-        ⚠️ O valor do Pix deve ser digitado manualmente conforme o total.
+        ⚠️ <strong>Atenção:</strong><br>
+        O recebedor pode aparecer como empresa ou identificador numérico.
+        Isso é normal no Pix Copia e Cola.
       </div>
 
-      <img src="qrcode.png" alt="QR Code Pix">
+      <img src="qrcode.png" class="pix-qrcode" alt="QR Code Pix">
 
-      <textarea id="pix" readonly>
-00020126580014br.gov.bcb.pix013615d0557a-2ef4-4187-9fd9-c4c4c985c76c5204000053039865802BR5901N6001C62090505648266304DCF2</textarea>
-
+      <textarea id="pix" readonly>00020126580014br.gov.bcb.pix013615d0557a-2ef4-4187-9fd9-c4c4c985c76c5204000053039865802BR5901N6001C62090505648266304DCF2</textarea>
 
       <button class="copy" onclick="copyPix()">📋 Copiar Pix</button>
+
+      <p>
+        Envie o comprovante para:<br>
+        <strong>WhatsApp (21) 98203-4341</strong>
+      </p>
+
+      <button class="help-btn" onclick="alert('Use Pix → Copia e Cola no app do seu banco.')">
+        ❓ Como pagar este Pix
+      </button>
     </div>
 
-    <p>
-      Envie o comprovante para:<br>
-      <strong>WhatsApp (21) 98203-4341</strong>
-    </p>
-
+    <!-- FECHAR -->
     <button class="close" onclick="closeModal()">Fechar</button>
 
   </div>
 </div>
 
-<hr>
 
 <h3>🔒 Painel do Organizador</h3>
 <button
@@ -118,4 +103,4 @@ oninput="maskWhatsApp(this)"
 <script src="script.js"></script>
 
 </body>
-  </html>
+</html>
