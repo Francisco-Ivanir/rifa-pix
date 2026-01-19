@@ -79,6 +79,17 @@ function toggle(el, n) {
   const phoneRaw = buyerPhone ? buyerPhone.value.trim() : "";
   const phone = phoneRaw.replace(/\D/g, "");
 
+// 🔒 bloqueio de múltiplos pendentes
+if (phone.length >= 10) {
+  if (hasPendingByPhone(phone)) {
+    alert(
+      "⚠️ Você já possui uma reserva pendente.\n\n" +
+      "Finalize ou aguarde a expiração para escolher novos números."
+    );
+    return;
+  }
+}
+
   // quantidade já usada por esse WhatsApp
   let already = 0;
   if (phone.length >= 10) {
@@ -185,12 +196,25 @@ function maskWhatsApp(input) {
   }
 }
 
+function openPixHelp() {
+  document.getElementById("pixHelpModal").style.display = "flex";
+}
+
+function closePixHelp() {
+  document.getElementById("pixHelpModal").style.display = "none";
+}
 
 function countNumbersByPhone(phone) {
   return raffleData.filter(item =>
     item.phone === phone &&
     (item.status === "pending" || item.status === "paid")
   ).length;
+}
+
+function hasPendingByPhone(phone) {
+  return raffleData.some(item =>
+    item.phone === phone && item.status === "pending"
+  );
 }
 
 function updateLimitWarning(phone) {
@@ -284,6 +308,11 @@ function sendToWhatsApp(name, phone, numbersArray, totalValue) {
 
 Pagamento via Pix em aberto.
 
+ℹ️ Sobre o Pix:
+O pagamento é intermediado por uma instituição financeira regulamentada.
+Por isso, o recebedor pode aparecer como empresa e com identificador numérico.
+Isso é normal e seu pagamento será validado corretamente.
+
 (uso interno)
 Confirmar pagamento:
 ${confirmLink}`;
@@ -292,6 +321,7 @@ ${confirmLink}`;
     `https://wa.me/${ownerWhatsApp}?text=${encodeURIComponent(msg)}`,
     "_blank"
   );
+
 }
 
 
@@ -534,4 +564,3 @@ function confirmFromUrl() {
   // limpa URL
   window.history.replaceState({}, document.title, window.location.pathname);
 }
-
