@@ -94,6 +94,23 @@ h1, h3 {
   cursor: pointer;
 }
 
+.pending-alert {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.pending-alert span {
+  display: block;
+  font-size: 22px;
+  margin-top: 6px;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -184,3 +201,60 @@ button {
   color: #1fa64a;
   font-weight: bold;
 }
+
+.pending-alert {
+  background: #fff3cd;
+  border: 1px solid #ffecb5;
+  color: #856404;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.pending-alert strong {
+  text-decoration: underline;
+}
+.pending-alert span {
+  display: block;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.affiliate-btn {
+  width: 100%;
+  margin: 15px 0;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  background: #6a1b9a;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.affiliate-btn:disabled {
+  background: #b39ddb;
+  cursor: not-allowed;
+}
+
+/* Toast reaproveitado */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #323232;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+  }
