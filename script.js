@@ -1,5 +1,5 @@
 const grid = document.getElementById("grid");
-const price = 0.75;
+const price = 0.80;
 const ownerWhatsApp = "5521982034341";
 const MAX_PER_PHONE = 5;
 
@@ -18,6 +18,30 @@ const paymentArea = document.getElementById("paymentArea");
 const count = document.getElementById("count");
 const total = document.getElementById("total");
 const modalTotal = document.getElementById("modalTotal");
+
+/* =========================
+   HISTÓRICO POR WHATSAPP
+========================= */
+
+function getHistory() {
+  return JSON.parse(localStorage.getItem("raffleHistory")) || {};
+}
+
+function saveHistory(history) {
+  localStorage.setItem("raffleHistory", JSON.stringify(history));
+}
+
+function initPhoneHistory(phone) {
+  const history = getHistory();
+
+  if (!history[phone]) {
+    history[phone] = {
+      paidCount: 0,
+      expiredCount: 0
+    };
+    saveHistory(history);
+  }
+}
 
 /* =========================
    SALVAR / CARREGAR
@@ -56,7 +80,7 @@ function loadData() {
    CRIA A GRADE
 ========================= */
 
-for (let i = 0; i < 100; i++) {
+for (let i = 01; i < 101; i++) {
   const n = i.toString().padStart(2, "0");
   const el = document.createElement("div");
 
@@ -75,28 +99,36 @@ for (let i = 0; i < 100; i++) {
 function toggle(el, n) {
   if (raffleData.find(item => item.number === n)) return;
 
-  // WhatsApp digitado (se existir)
-  const phoneRaw = buyerPhone ? buyerPhone.value.trim() : "";
-  const phone = phoneRaw.replace(/\D/g, "");
+  let phone = "";
 
-// 🔒 bloqueio de múltiplos pendentes
-if (phone.length >= 10) {
-  if (hasPendingByPhone(phone)) {
-    alert(
-      "⚠️ Você já possui uma reserva pendente.\n\n" +
-      "Finalize ou aguarde a expiração para escolher novos números."
-    );
-    return;
+  // tenta pegar do input
+  if (buyerPhone && buyerPhone.value.trim()) {
+    phone = buyerPhone.value.replace(/\D/g, "");
   }
-}
 
-  // quantidade já usada por esse WhatsApp
+  // fallback: localStorage (pós reload)
+  if (!phone) {
+    phone = localStorage.getItem("currentBuyerPhone") || "";
+  }
+
+  // 🔒 BLOQUEIO: pendência ativa
+  if (phone.length >= 10) {
+    const pending = getPendingByPhone(phone);
+    if (pending) {
+      alert(
+        "⚠️ Você possui uma reserva pendente.\n\n" +
+        "Finalize o pagamento ou aguarde expirar."
+      );
+      return;
+    }
+  }
+
+  // quantidade já usada
   let already = 0;
   if (phone.length >= 10) {
     already = countNumbersByPhone(phone);
   }
 
-  // bloqueio antecipado
   if (!selected.includes(n)) {
     if (already + selected.length >= MAX_PER_PHONE) {
       alert(
@@ -117,14 +149,6 @@ if (phone.length >= 10) {
   }
 
   updateCart();
-}
-
-const phoneInput = document.getElementById("buyerPhone");
-if (phoneInput) {
-  const phone = phoneInput.value.replace(/\D/g, "");
-  if (phone.length >= 10) {
-    updateLimitCounter(phone);
-  }
 }
 
 
@@ -155,6 +179,11 @@ if (phoneInput) {
 }
 
   modal.style.display = "flex";
+  const savedPhone = localStorage.getItem("currentBuyerPhone");
+  if (savedPhone && buyerPhone) {
+  buyerPhone.value = savedPhone;
+  }
+  
 }
 
 function closeModal() {
@@ -163,6 +192,8 @@ const warning = document.getElementById("limitWarning");
 if (warning) warning.style.display = "none";
 const counter = document.getElementById("limitCounter");
 if (counter) counter.style.display = "none";
+const timerBox = document.getElementById("paymentTimer");
+if (timerBox) timerBox.style.display = "none";
 
 }
 
@@ -217,6 +248,12 @@ function hasPendingByPhone(phone) {
   );
 }
 
+function getPendingByPhone(phone) {
+  return raffleData.find(
+    item => item.phone === phone && item.status === "pending"
+  );
+}
+
 function updateLimitWarning(phone) {
   const warning = document.getElementById("limitWarning");
   if (!warning) return;
@@ -248,6 +285,22 @@ function updateLimitCounter(phone) {
   counter.style.display = "block";
 }
 
+function getRemainingTimeByPhone(phone) {
+  const now = Date.now();
+
+  const pendings = raffleData.filter(item =>
+    item.phone === phone && item.status === "pending"
+  );
+
+  if (!pendings.length) return 0;
+
+  // pega o MAIS ANTIGO
+  const first = pendings.reduce((a, b) =>
+    a.time < b.time ? a : b
+  );
+
+  return PENDING_TIME - (now - first.time);
+}
 
 function confirmBuyer() {
   const name = buyerName.value.trim();
@@ -259,6 +312,8 @@ function confirmBuyer() {
     buyerPhone.focus();
     return;
   }
+
+localStorage.setItem("currentBuyerPhone", phone);
 
   const alreadyTaken = countNumbersByPhone(phone);
   const tryingToTake = selected.length;
@@ -274,12 +329,34 @@ function confirmBuyer() {
 
   const chosenNumbers = [...selected];
   const totalValue = chosenNumbers.length * price;
+localStorage.setItem(
+  "pendingTotal",
+  totalValue.toFixed(2).replace(".", ",")
+);
 
   markAsPending(name, phone, chosenNumbers);
   sendToWhatsApp(name, phone, chosenNumbers, totalValue);
 
   buyerForm.style.display = "none";
   paymentArea.style.display = "block";
+  const timerBox = document.getElementById("paymentTimer");
+  const timerText = document.getElementById("paymentTime");
+  
+  timerBox.style.display = "block";
+  
+  const timerInterval = setInterval(() => {
+  const remaining = getRemainingTimeByPhone(phone);
+  
+  if (remaining <= 0) {
+  clearInterval(timerInterval);
+  alert("⏰ Sua reserva expirou.");
+  closeModal();
+  return;
+  }
+  
+  timerText.innerText = formatTime(remaining);
+  }, 1000);
+  
 }
 
 
@@ -324,21 +401,89 @@ ${confirmLink}`;
 
 }
 
+function sendReminder(index) {
+  const item = raffleData[index];
+  if (!item || item.status !== "pending") return;
+
+  if (item.reminderSent) {
+    alert("🔔 Lembrete já enviado para este cliente.");
+    return;
+  }
+
+  const remaining =
+    PENDING_TIME - (Date.now() - item.time);
+
+  const time = formatTime(remaining);
+
+  const msg =
+`Olá, ${item.name}! 👋
+
+Seus números (${item.number}) ainda estão reservados 🎟️
+
+⏳ Tempo restante: ${time}
+
+Caso ainda queira participar, é só finalizar o pagamento via Pix.
+
+Qualquer dúvida estou à disposição 😉`;
+
+let phone = item.phone;
+
+// garante código do país
+if (!phone.startsWith("55")) {
+  phone = "55" + phone;
+}
+
+window.open(
+  `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
+  "_blank"
+);
+
+
+  item.reminderSent = true;
+  saveData();
+  renderPanel();
+}
 
 
 /* =========================
    PENDENTE / PAGO
 ========================= */
+function openPendingPayment() {
+  const phone = localStorage.getItem("currentBuyerPhone") || "";
+  if (phone.length < 10) return;
+
+  const pending = getPendingByPhone(phone);
+  if (!pending) return;
+
+  // abre modal SEM exigir selected[]
+  modal.style.display = "flex";
+
+  buyerForm.style.display = "none";
+  paymentArea.style.display = "block";
+
+  const timerBox = document.getElementById("paymentTimer");
+  const timerText = document.getElementById("paymentTime");
+
+  if (timerBox && timerText) {
+    timerBox.style.display = "block";
+
+    timerText.innerText = formatTime(
+      PENDING_TIME - (Date.now() - pending.time)
+    );
+  }
+}
 
 function markAsPending(name, phone, numbersArray) {
   numbersArray.forEach(n => {
     raffleData.push({
-  number: n,
-  name,
-  phone,
-  status: "pending",
-  time: Date.now()
-});
+    number: n,
+    name,
+    phone,
+    status: "pending",
+    time: Date.now(),
+    reminderSent: false
+    });
+    
 
 
     const el = document.querySelector(`[data-number="${n}"]`);
@@ -358,6 +503,11 @@ function markAsPending(name, phone, numbersArray) {
 
 function markAsPaid(i) {
   raffleData[i].status = "paid";
+// 📊 histórico de pagamento
+initPhoneHistory(raffleData[i].phone);
+const history = getHistory();
+history[raffleData[i].phone].paidCount += 1;
+saveHistory(history);
 
   const el = document.querySelector(
     `[data-number="${raffleData[i].number}"]`
@@ -373,9 +523,31 @@ function markAsPaid(i) {
 /* =========================
    PAINEL
 ========================= */
+function renderReport() {
+  const sold = raffleData.filter(i => i.status === "paid").length;
+  const pending = raffleData.filter(i => i.status === "pending").length;
+
+  const totalValue = sold * price;
+
+  return `
+    <div style="
+      background:#f1f8e9;
+      border-radius:10px;
+      padding:12px;
+      margin-bottom:15px;
+      font-size:14px;
+    ">
+      <strong>📊 Relatório da Rifa</strong><br>
+      ✔ Vendidos: <strong>${sold}</strong><br>
+      ⏳ Pendentes: <strong>${pending}</strong><br>
+      💰 Total vendido: <strong>R$ ${totalValue.toFixed(2).replace(".", ",")}</strong>
+    </div>
+  `;
+}
+
 
 function renderPanel() {
-  panel.innerHTML = "";
+  panel.innerHTML = renderReport();
 
   raffleData.forEach((item, i) => {
     let timer = "";
@@ -394,15 +566,148 @@ function renderPanel() {
         ${item.status.toUpperCase()}
         ${timer}
         ${
-          item.status === "pending"
-            ? `<br><button onclick="markAsPaid(${i})">Confirmar</button>`
-            : ""
+        item.status === "pending"
+        ? `
+        <br>
+        <button onclick="markAsPaid(${i})">Confirmar</button>
+        ${
+        !item.reminderSent
+        ? `<br><button
+        style="margin-top:8px;"
+        onclick="sendReminder(${i})"
+        >
+        🔔 Enviar lembrete
+        </button>
+        `
+        : `<br><small>🔔 Lembrete enviado</small>`
         }
+        `
+        : ""
+        }
+        ${
+        (() => {
+        const history = getHistory()[item.phone];
+        if (!history) return "";
+        
+        return `
+        <div style="margin-top:6px; font-size:12px; opacity:.85">
+        📊 Histórico:
+        ✔ Pagou: ${history.paidCount}
+        ⏳ Expirou: ${history.expiredCount}
+        </div>
+        `;
+        })()
+        }
+        
       </div>
     `;
   });
 }
 
+function exportPaidReport() {
+  if (!adminUnlocked) {
+    alert("Acesso negado.");
+    return;
+  }
+
+  const paid = raffleData.filter(item => item.status === "paid");
+
+  if (!paid.length) {
+    alert("Nenhum número pago ainda.");
+    return;
+  }
+
+  let text = "🎟️ RELATÓRIO DA RIFA\n\n";
+  text += "✅ NÚMEROS PAGOS\n\n";
+
+  paid.forEach(item => {
+    text += `${item.number} - ${item.name}\n`;
+  });
+
+  text += `\nTotal de vendidos: ${paid.length}`;
+
+  const url =
+    `https://wa.me/${ownerWhatsApp}?text=` +
+    encodeURIComponent(text);
+
+  window.open(url, "_blank");
+}
+
+function updatePendingBanner() {
+  const alertBox = document.getElementById("pendingAlert");
+  if (!alertBox) return;
+
+  // não mostrar se o modal estiver aberto
+  if (modal.style.display === "flex") {
+    alertBox.style.display = "none";
+    return;
+  }
+
+  const phone = localStorage.getItem("currentBuyerPhone");
+  if (!phone) {
+    alertBox.style.display = "none";
+    return;
+  }
+
+  const pending = getPendingByPhone(phone);
+  if (!pending) {
+    alertBox.style.display = "none";
+    return;
+  }
+
+  const remaining =
+    PENDING_TIME - (Date.now() - pending.time);
+
+  document.getElementById("pendingTime").innerText =
+    `⏳ ${formatTime(remaining)}`;
+
+  alertBox.style.display = "block";
+
+  // clique leva direto ao pagamento
+  alertBox.onclick = () => {
+  modal.style.display = "flex";
+  buyerForm.style.display = "none";
+  paymentArea.style.display = "block";
+
+  const savedTotal = localStorage.getItem("pendingTotal");
+  if (savedTotal) {
+    modalTotal.innerText = savedTotal;
+  }
+};
+
+}
+
+function generateTextReport() {
+  const history = JSON.parse(localStorage.getItem("raffleHistory")) || {};
+
+  let sold = raffleData.filter(i => i.status === "paid").length;
+  let pending = raffleData.filter(i => i.status === "pending").length;
+
+  let text = `📊 RELATÓRIO DA RIFA\n\n`;
+  text += `✔ Vendidos: ${sold}\n`;
+  text += `⏳ Pendentes: ${pending}\n\n`;
+  text += `📱 Histórico por WhatsApp:\n`;
+
+  if (Object.keys(history).length === 0) {
+    text += "- Nenhum histórico ainda.";
+  } else {
+    Object.entries(history).forEach(([phone, data]) => {
+      text += `- ${phone} → ✔ Pagou: ${data.paidCount} | ⏳ Expirou: ${data.expiredCount}\n`;
+    });
+  }
+
+  return text;
+}
+
+function exportReport() {
+  const report = generateTextReport();
+
+  navigator.clipboard.writeText(report).then(() => {
+    alert("📋 Relatório copiado!\n\nCole no WhatsApp ou onde quiser.");
+  }).catch(() => {
+    alert("❌ Não foi possível copiar o relatório.");
+  });
+}
 
 /* =========================
    INIT
@@ -415,6 +720,9 @@ checkExpiredPendings();
 setInterval(() => {
   checkExpiredPendings();
   renderPanel();
+  updatePendingAlerts();
+  updatePendingBanner();
+  
 }, 1000);
 
 
@@ -471,6 +779,42 @@ function resetRaffle() {
   alert("✅ Rifa resetada com sucesso.");
 }
 
+function updatePendingAlerts() {
+  const phoneInput = document.getElementById("buyerPhone");
+  if (!phoneInput) return;
+
+  const phone = phoneInput.value.replace(/\D/g, "");
+  if (phone.length < 10) return;
+
+  const pending = getPendingByPhone(phone);
+
+  const alertBox = document.getElementById("pendingAlert");
+  const modalAlert = document.getElementById("pendingModalAlert");
+
+  if (!pending) {
+    alertBox.style.display = "none";
+    modalAlert.style.display = "none";
+    return;
+  }
+
+  const remaining =
+    PENDING_TIME - (Date.now() - pending.time);
+
+  const time = formatTime(remaining);
+
+  const msg = `
+    ⚠️ Você possui uma reserva pendente
+    <span>⏳ ${time}</span>
+    Finalize o pagamento para liberar novos números.
+  `;
+
+  alertBox.innerHTML = msg;
+  // modalAlert.innerHTML = msg;
+
+  alertBox.style.display = "block";
+  // modalAlert.style.display = "block";
+}
+
 function checkExpiredPendings() {
   const now = Date.now();
   let changed = false;
@@ -488,9 +832,12 @@ function checkExpiredPendings() {
 
       if (el) {
         el.innerHTML = `
-          ${item.number}<br>
-          <small>⏳ ${formatTime(remaining)}</small>
+        <strong>${item.number}</strong>
+        <div style="font-size:11px; margin-top:2px">
+        ⏳ ${formatTime(remaining)}
+        </div>
         `;
+        
       }
 
       return;
@@ -499,6 +846,13 @@ function checkExpiredPendings() {
     // ✅ Expirou agora
     item.status = "expired";
     changed = true;
+    
+    // 📊 histórico de expiração
+    initPhoneHistory(item.phone);
+    const history = getHistory();
+    history[item.phone].expiredCount += 1;
+    saveHistory(history);
+    
 
     const el = document.querySelector(
       `[data-number="${item.number}"]`
@@ -521,46 +875,3 @@ function checkExpiredPendings() {
   }
 }
 
-
-function formatTime(ms) {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
-  const seconds = String(totalSeconds % 60).padStart(2, "0");
-  return `${minutes}:${seconds}`;
-}
-
-function confirmFromUrl() {
-  if (!adminUnlocked) return;
-
-  const params = new URLSearchParams(window.location.search);
-  const confirm = params.get("confirm");
-
-  if (!confirm) return;
-
-  const numbers = confirm.split(",");
-
-  numbers.forEach(num => {
-    const item = raffleData.find(
-      x => x.number === num && x.status === "pending"
-    );
-
-    if (item) {
-      item.status = "paid";
-
-      const el = document.querySelector(
-        `[data-number="${num}"]`
-      );
-
-      if (el) {
-        el.classList.remove("pending");
-        el.classList.add("paid");
-      }
-    }
-  });
-
-  saveData();
-  renderPanel();
-
-  // limpa URL
-  window.history.replaceState({}, document.title, window.location.pathname);
-}
