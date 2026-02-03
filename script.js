@@ -876,4 +876,3 @@ function checkExpiredPendings() {
 }
 
 
-function
