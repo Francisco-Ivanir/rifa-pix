@@ -11,7 +11,40 @@
 <body>
 
 <h1>🎟️ Rifa PIX de R$ 50</h1>
+<div id="pendingAlert" class="pending-alert" style="display:none;">
+  ⚠️ Você tem uma reserva em andamento —
+  <strong>clique aqui para finalizar o pagamento</strong>
+  <span id="pendingTime"></span>
+</div>
+
+<div id="pendingAlert"
+     style="
+       display:none;
+       position:sticky;
+       top:0;
+       z-index:999;
+       background:#fff3cd;
+       color:#856404;
+       padding:12px;
+       text-align:center;
+       font-weight:600;
+       border-bottom:2px solid #ffeeba;
+       cursor:pointer;
+     "
+     onclick="openPendingPayment()">
+</div>
+
+<div id="pendingAlert" class="pending-alert" style="display:none;"></div>
+
 <div class="grid" id="grid"></div>
+
+<button
+  id="affiliateBtn"
+  class="affiliate-btn"
+  onclick="showAffiliateRules()"
+>
+  🤝 Indique e Ganhe
+</button>
 
 <div class="cart" onclick="openModal()">
   🛒 <span id="count">0</span> | R$ <span id="total">0,00</span>
@@ -24,6 +57,8 @@
     <h3 class="pix-title">💸 Pagamento via Pix</h3>
 
 <div class="pix-steps">
+<div id="pendingModalAlert" class="pending-alert" style="display:none;"></div>
+
   <span class="active">1️⃣ Identificação</span>
   <span>2️⃣ Pagamento</span>
   <span>3️⃣ Comprovante</span>
@@ -54,6 +89,18 @@
 
     <!-- PAGAMENTO -->
     <div id="paymentArea" style="display:none;">
+<div
+  id="paymentTimer"
+  style="
+    font-size:22px;
+    font-weight:bold;
+    color:#c62828;
+    margin:10px 0;
+    display:none;
+  "
+>
+  ⏳ Reserva válida por: <span id="paymentTime">00:00</span>
+</div>
 
       <div class="pix-warning">
         ⚠️ <strong>Atenção:</strong><br>
@@ -92,12 +139,22 @@
   🧨 Resetar rifa
 </button>
 
+<button
+  onclick="exportPaidReport()"
+  style="background:#2e7d32;color:#fff;padding:10px;border:none;border-radius:8px;width:100%;margin-bottom:10px;"
+>
+  📄 Exportar relatório (pagos)
+</button>
+
 <button id="adminBtn" onclick="openAdmin()">
   🔒 Área do administrador
 </button>
 
 <div id="panel" style="display:none;"></div>
 
+<button onclick="exportReport()" style="margin-top:10px">
+  🧾 Exportar relatório (texto)
+</button>
 
 <!-- JavaScript externo -->
 <script src="script.js"></script>
