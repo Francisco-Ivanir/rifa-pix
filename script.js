@@ -875,4 +875,41 @@ function checkExpiredPendings() {
   }
 }
 
+function sanitizeRaffleData() {
+  const now = Date.now();
 
+  raffleData = raffleData.filter(item => {
+    if (item.status !== "pending") return true;
+
+    // sem tempo → inválido
+    if (!item.time) return false;
+
+    // expirado → remove
+    if (now - item.time > PENDING_TIME) return false;
+
+    return true;
+  });
+
+  saveData();
+}
+
+function recoverPendingForCurrentBuyer() {
+  const phone = localStorage.getItem("currentBuyerPhone");
+  if (!phone) return;
+
+  const pending = raffleData.find(
+    item => item.status === "pending" && item.phone === phone
+  );
+
+  if (pending) {
+    opeAnModal();
+  }
+}
+
+window.addEventListener("load", () => {
+  sanitizeRaffleData();
+  renderGrid();
+  renderPanel();
+  recoverPendingForCurrentBuyer();
+});
+   
