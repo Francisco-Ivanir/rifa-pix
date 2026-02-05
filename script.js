@@ -713,7 +713,6 @@ function exportReport() {
    INIT
 ========================= */
 
-loadData();
 confirmFromUrl();
 
 checkExpiredPendings();
@@ -902,14 +901,18 @@ function recoverPendingForCurrentBuyer() {
   );
 
   if (pending) {
-    opeAnModal();
+    openPendingPayment(); // ✅ função correta já existe no seu código
   }
-}
+        }
+     
 
 window.addEventListener("load", () => {
   sanitizeRaffleData();
-  renderGrid();
+  loadData();
+  checkExpiredPendings();
   renderPanel();
+  updatePendingBanner();
   recoverPendingForCurrentBuyer();
 });
+     
    
