@@ -712,19 +712,6 @@ function exportReport() {
 /* =========================
    INIT
 ========================= */
-
-confirmFromUrl();
-
-checkExpiredPendings();
-setInterval(() => {
-  checkExpiredPendings();
-  renderPanel();
-  updatePendingAlerts();
-  updatePendingBanner();
-  
-}, 1000);
-
-
 function openAdmin() {
   const pass = prompt("Digite a senha do administrador:");
   if (pass === ADMIN_PASSWORD) {
@@ -905,14 +892,18 @@ function recoverPendingForCurrentBuyer() {
   }
         }
      
-
-window.addEventListener("load", () => {
-  sanitizeRaffleData();
+   window.addEventListener("load", () => {
   loadData();
+  sanitizeRaffleData();
+  renderPanel();
+  confirmFromUrl();
+  checkExpiredPendings();
+  updatePendingBanner();
+});
+
+setInterval(() => {
   checkExpiredPendings();
   renderPanel();
   updatePendingBanner();
-  recoverPendingForCurrentBuyer();
-});
-     
-   
+}, 1000);
+       
