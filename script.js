@@ -307,11 +307,19 @@ function getRemainingTimeByPhone(phone) {
   return PENDING_TIME - (now - first.time);
 }
 
-function confirmBuyer() {
+ function confirmBuyer() {
   const buyerName = document.getElementById("buyerName");
-const name = buyerName ? buyerName.value.trim() : "";
-  const phoneRaw = buyerPhone.value.trim();
+  const buyerPhone = document.getElementById("buyerPhone");
+
+  const name = buyerName ? buyerName.value.trim() : "";
+  const phoneRaw = buyerPhone ? buyerPhone.value.trim() : "";
   const phone = phoneRaw.replace(/\D/g, "");
+
+  if (!name) {
+    alert("👤 Informe seu nome.");
+    buyerName.focus();
+    return;
+  }
 
   if (phone.length < 10 || phone.length > 11) {
     alert("📱 Informe um WhatsApp válido (DDD + número).");
@@ -319,7 +327,7 @@ const name = buyerName ? buyerName.value.trim() : "";
     return;
   }
 
-localStorage.setItem("currentBuyerPhone", phone);
+  localStorage.setItem("currentBuyerPhone", phone);
 
   const alreadyTaken = countNumbersByPhone(phone);
   const tryingToTake = selected.length;
@@ -335,36 +343,36 @@ localStorage.setItem("currentBuyerPhone", phone);
 
   const chosenNumbers = [...selected];
   const totalValue = chosenNumbers.length * price;
-localStorage.setItem(
-  "pendingTotal",
-  totalValue.toFixed(2).replace(".", ",")
-);
+
+  localStorage.setItem(
+    "pendingTotal",
+    totalValue.toFixed(2).replace(".", ",")
+  );
 
   markAsPending(name, phone, chosenNumbers);
   sendToWhatsApp(name, phone, chosenNumbers, totalValue);
 
   buyerForm.style.display = "none";
   paymentArea.style.display = "block";
+
   const timerBox = document.getElementById("paymentTimer");
   const timerText = document.getElementById("paymentTime");
-  
-  timerBox.style.display = "block";
-  
-  const timerInterval = setInterval(() => {
-  const remaining = getRemainingTimeByPhone(phone);
-  
-  if (remaining <= 0) {
-  clearInterval(timerInterval);
-  alert("⏰ Sua reserva expirou.");
-  closeModal();
-  return;
-  }
-  
-  timerText.innerText = formatTime(remaining);
-  }, 1000);
-  
-}
 
+  timerBox.style.display = "block";
+
+  const timerInterval = setInterval(() => {
+    const remaining = getRemainingTimeByPhone(phone);
+
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      alert("⏰ Sua reserva expirou.");
+      closeModal();
+      return;
+    }
+
+    timerText.innerText = formatTime(remaining);
+  }, 1000);
+}
 
 /* =========================
    WHATSAPP
