@@ -18,6 +18,8 @@ const paymentArea = document.getElementById("paymentArea");
 const count = document.getElementById("count");
 const total = document.getElementById("total");
 const modalTotal = document.getElementById("modalTotal");
+const buyerName = document.getElementById("buyerName");
+const buyerPhone = document.getElementById("buyerPhone");
 
 /* =========================
    HISTÓRICO POR WHATSAPP
