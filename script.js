@@ -305,7 +305,8 @@ function getRemainingTimeByPhone(phone) {
 }
 
 function confirmBuyer() {
-  const name = buyerName.value.trim();
+  const buyerName = document.getElementById("buyerName");
+const name = buyerName ? buyerName.value.trim() : "";
   const phoneRaw = buyerPhone.value.trim();
   const phone = phoneRaw.replace(/\D/g, "");
 
