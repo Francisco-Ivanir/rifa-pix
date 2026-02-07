@@ -102,7 +102,9 @@ function toggle(el, n) {
   let phone = "";
 
   // tenta pegar do input
-  if (buyerPhone && buyerPhone.value.trim()) {
+  const buyerPhone = document.getElementById("buyerPhone");
+
+if (buyerPhone && buyerPhone.value.trim()) {
     phone = buyerPhone.value.replace(/\D/g, "");
   }
 
