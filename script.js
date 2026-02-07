@@ -1,4 +1,4 @@
-mconst grid = document.getElementById("grid");
+const grid = document.getElementById("grid");
 const price = 0.80;
 const ownerWhatsApp = "5521982034341";
 const MAX_PER_PHONE = 5;
