@@ -892,18 +892,47 @@ function recoverPendingForCurrentBuyer() {
   }
         }
      
-   window.addEventListener("load", () => {
-  loadData();
-  sanitizeRaffleData();
-  renderPanel();
-  confirmFromUrl();
-  checkExpiredPendings();
-  updatePendingBanner();
-});
 
-setInterval(() => {
-  checkExpiredPendings();
-  renderPanel();
-  updatePendingBanner();
-}, 1000);
+// ===============================
+// 🚀 INICIALIZAÇÃO FINAL DO SISTEMA
+// ===============================
+
+window.addEventListener("load", () => {
+  try {
+    // 1) Corrige qualquer lixo/sujeira no raffleData
+    if (typeof sanitizeRaffleData === "function") {
+      sanitizeRaffleData();
+    }
+
+    // 2) Carrega dados salvos
+    if (typeof loadData === "function") {
+      loadData();
+    }
+
+    // 3) Atualiza painel admin
+    if (typeof renderPanel === "function") {
+      renderPanel();
+    }
+
+    // 4) Atualiza aviso de pendência na grade (se existir)
+    if (typeof updatePendingBanner === "function") {
+      updatePendingBanner();
+    }
+
+    // 5) Se tiver pendência ativa salva, tenta recuperar
+    if (typeof recoverPendingForCurrentBuyer === "function") {
+      recoverPendingForCurrentBuyer();
+    }
+
+    // 6) Inicia verificação de expiração (cronômetros)
+    if (typeof checkExpiredPendings === "function") {
+      checkExpiredPendings();
+      setInterval(checkExpiredPendings, 1000);
+    }
+
+  } catch (err) {
+    console.error("❌ Erro ao iniciar sistema:", err);
+  }
+});
+     
        
