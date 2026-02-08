@@ -995,3 +995,9 @@ window.addEventListener("load", () => {
   }
 });
      
+window.addEventListener("load", () => {
+  loadData();
+  checkExpiredPendings();
+  showPendingWarning();
+});
+     
