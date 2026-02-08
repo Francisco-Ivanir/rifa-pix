@@ -499,15 +499,13 @@ function openPendingPayment() {
 function markAsPending(name, phone, numbersArray) {
   numbersArray.forEach(n => {
     raffleData.push({
-    number: n,
-    name,
-    phone,
-    status: "pending",
-    time: Date.now(),
-    reminderSent: false
+      number: n,
+      name,
+      phone,
+      status: "pending",
+      time: Date.now(),
+      reminderSent: false
     });
-    
-
 
     const el = document.querySelector(`[data-number="${n}"]`);
     if (el) {
@@ -518,14 +516,14 @@ function markAsPending(name, phone, numbersArray) {
   });
 
   selected = [];
-updateCart();
+  updateCart();
 
-saveData();
-loadData();
-renderPanel();
+  // salva no localStorage
+  saveData();
 
-}
-
+  // atualiza painel (sem recarregar tudo)
+  renderPanel();
+     }
 
 function markAsPaid(i) {
   raffleData[i].status = "paid";
