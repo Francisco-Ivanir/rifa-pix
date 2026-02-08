@@ -546,6 +546,40 @@ saveHistory(history);
   renderPanel();
 }
 
+function showPendingWarning() {
+  const phone = localStorage.getItem("currentBuyerPhone");
+  if (!phone) return;
+
+  const pending = raffleData.filter(item => item.phone === phone && item.status === "pending");
+  if (pending.length === 0) return;
+
+  let warning = document.getElementById("pendingWarning");
+
+  if (!warning) {
+    warning = document.createElement("div");
+    warning.id = "pendingWarning";
+    warning.style.background = "#ff9800";
+    warning.style.color = "#000";
+    warning.style.padding = "12px";
+    warning.style.borderRadius = "12px";
+    warning.style.margin = "15px 0";
+    warning.style.fontWeight = "bold";
+    warning.style.textAlign = "center";
+    warning.style.cursor = "pointer";
+
+    warning.onclick = () => {
+      openModal();
+      buyerForm.style.display = "none";
+      paymentArea.style.display = "block";
+    };
+
+    const title = document.querySelector("h1");
+    if (title) title.insertAdjacentElement("afterend", warning);
+  }
+
+  warning.innerHTML = `⚠️ Você tem ${pending.length} número(s) pendente(s). Clique aqui para voltar ao pagamento.`;
+  }
+   
 /* =========================
    PAINEL
 ========================= */
