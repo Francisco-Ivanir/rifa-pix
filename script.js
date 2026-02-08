@@ -518,9 +518,12 @@ function markAsPending(name, phone, numbersArray) {
   });
 
   selected = [];
-  saveData();
-  updateCart();
-  renderPanel();
+updateCart();
+
+saveData();
+loadData();
+renderPanel();
+
 }
 
 
