@@ -952,7 +952,6 @@ function recoverPendingForCurrentBuyer() {
   }
         }
      
-
 // ===============================
 // 🚀 INICIALIZAÇÃO FINAL DO SISTEMA
 // ===============================
@@ -979,12 +978,17 @@ window.addEventListener("load", () => {
       updatePendingBanner();
     }
 
-    // 5) Se tiver pendência ativa salva, tenta recuperar
+    // 5) Mostra aviso de pendência (banner topo)
+    if (typeof showPendingWarning === "function") {
+      showPendingWarning();
+    }
+
+    // 6) Se tiver pendência ativa salva, tenta recuperar
     if (typeof recoverPendingForCurrentBuyer === "function") {
       recoverPendingForCurrentBuyer();
     }
 
-    // 6) Inicia verificação de expiração (cronômetros)
+    // 7) Inicia verificação de expiração (cronômetros)
     if (typeof checkExpiredPendings === "function") {
       checkExpiredPendings();
       setInterval(checkExpiredPendings, 1000);
@@ -993,11 +997,5 @@ window.addEventListener("load", () => {
   } catch (err) {
     console.error("❌ Erro ao iniciar sistema:", err);
   }
-});
-     
-window.addEventListener("load", () => {
-  loadData();
-  checkExpiredPendings();
-  showPendingWarning();
 });
      
