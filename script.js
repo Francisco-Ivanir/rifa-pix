@@ -972,3 +972,36 @@ window.addEventListener("load", () => {
   }
 });
      
+function openAffiliateArea() {
+  const phone = localStorage.getItem("currentBuyerPhone");
+
+  if (!phone) {
+    alert("⚠️ Para acessar, primeiro finalize uma compra e confirme seu WhatsApp.");
+    return;
+  }
+
+  const history = JSON.parse(localStorage.getItem("raffleHistory")) || {};
+
+  const paidCount = history[phone]?.paidCount || 0;
+
+  if (paidCount < 5) {
+    alert(
+      "🎉 ÁREA DE AFILIADOS\n\n" +
+      "Esta área é liberada após a compra de 5 números pagos.\n\n" +
+      `📌 Você já tem ${paidCount} número(s) pago(s).\n\n` +
+      "Ao atingir esse requisito, você poderá participar de ações promocionais e benefícios por indicação.\n\n" +
+      "Regras detalhadas serão divulgadas em breve 😉"
+    );
+    return;
+  }
+
+  // ✅ Liberado
+  const msg =
+    "🎉 Olá! Quero acessar minha área de afiliados da Rifa PIX.\n\n" +
+    `📱 Meu WhatsApp: ${phone}\n\n` +
+    "Já completei 5 números pagos.";
+
+  const link = `https://wa.me/5521982034341?text=${encodeURIComponent(msg)}`;
+
+  window.open(link, "_blank");
+}
