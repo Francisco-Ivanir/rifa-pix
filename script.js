@@ -940,19 +940,26 @@ function sanitizeRaffleData() {
   saveData();
 }
 
-
 function recoverPendingForCurrentBuyer() {
   const phone = localStorage.getItem("currentBuyerPhone");
   if (!phone) return;
 
-  const pending = raffleData.find(
-    item => item.status === "pending" && item.phone === phone
-  );
+  const pendingNumbers = raffleData
+    .filter(item => item.status === "pending" && item.phone === phone)
+    .map(item => item.number);
 
-  if (pending) {
-    openPendingPayment(); // ✅ função correta já existe no seu código
-  }
+  if (pendingNumbers.length === 0) return;
+
+  const totalValue = pendingNumbers.length * price;
+
+  document.getElementById("paymentValue").innerText =
+    "R$ " + totalValue.toFixed(2).replace(".", ",");
+
+  openModal();
+  document.getElementById("buyerForm").style.display = "none";
+  document.getElementById("paymentArea").style.display = "block";
         }
+
      
 // ===============================
 // 🚀 INICIALIZAÇÃO FINAL DO SISTEMA
