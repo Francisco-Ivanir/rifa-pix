@@ -922,13 +922,16 @@ function checkExpiredPendings() {
 function sanitizeRaffleData() {
   const now = Date.now();
 
+  const saved = localStorage.getItem("raffleData");
+  if (!saved) return;
+
+  raffleData = JSON.parse(saved);
+
   raffleData = raffleData.filter(item => {
     if (item.status !== "pending") return true;
 
-    // sem tempo → inválido
     if (!item.time) return false;
 
-    // expirado → remove
     if (now - item.time > PENDING_TIME) return false;
 
     return true;
@@ -936,6 +939,7 @@ function sanitizeRaffleData() {
 
   saveData();
 }
+
 
 function recoverPendingForCurrentBuyer() {
   const phone = localStorage.getItem("currentBuyerPhone");
