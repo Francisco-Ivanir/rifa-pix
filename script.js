@@ -527,18 +527,20 @@ function markAsPending(name, phone, numbersArray) {
 
 function markAsPaid(i) {
   raffleData[i].status = "paid";
-// 📊 histórico de pagamento
-initPhoneHistory(raffleData[i].phone);
-const history = getHistory();
-history[raffleData[i].phone].paidCount += 1;
-saveHistory(history);
 
-  const el = document.querySelector(
-    `[data-number="${raffleData[i].number}"]`
-  );
+  // 📊 histórico de pagamento
+  initPhoneHistory(raffleData[i].phone);
+  const history = getHistory();
+  history[raffleData[i].phone].paidCount += 1;
+  saveHistory(history);
 
-  el.classList.remove("pending");
-  el.classList.add("paid");
+  const el = document.querySelector(`[data-number="${raffleData[i].number}"]`);
+
+  if (el) {
+    el.classList.remove("pending");
+    el.classList.add("paid");
+    el.onclick = null;
+  }
 
   saveData();
   renderPanel();
