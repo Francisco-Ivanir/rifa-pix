@@ -258,3 +258,31 @@ button {
 .toast.show {
   opacity: 1;
   }
+
+#pixHelpModal .modal-content {
+  max-width: 500px;
+  width: 92%;
+  padding: 18px;
+  border-radius: 12px;
+  background: #fff;
+  color: #000;
+  text-align: left;
+}
+
+#pixHelpModal p {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+#pixHelpModal button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #222;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
