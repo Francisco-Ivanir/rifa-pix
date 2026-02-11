@@ -752,13 +752,33 @@ function openAdmin() {
 }
 
 function resetRaffle() {
-  if (!confirm("⚠️ Tem certeza que deseja resetar tudo? Isso apaga pendências e histórico.")) return;
+  const pass = prompt("🔒 Digite a senha do administrador para resetar:");
 
-  // limpa dados principais
+  if (pass !== ADMIN_PASSWORD) {
+    alert("❌ Senha incorreta.");
+    return;
+  }
+
+  const confirm1 = confirm(
+    "⚠️ ATENÇÃO!\n\nIsso apagará TODOS os dados da rifa (incluindo histórico e pendências).\nDeseja continuar?"
+  );
+
+  if (!confirm1) return;
+
+  const confirm2 = prompt(
+    "Digite RESETAR para confirmar a limpeza total:"
+  );
+
+  if (confirm2 !== "RESETAR") {
+    alert("❌ Reset cancelado.");
+    return;
+  }
+
+  // Limpa dados do sistema
   raffleData = [];
   selected = [];
 
-  // limpa localStorage completo do sistema
+  // Limpa localStorage completo
   localStorage.removeItem("raffleData");
   localStorage.removeItem("raffleHistory");
   localStorage.removeItem("currentBuyerPhone");
@@ -768,8 +788,7 @@ function resetRaffle() {
   alert("✅ Rifa resetada COMPLETAMENTE!");
 
   location.reload();
-     }
-   
+}
 
 function updatePendingAlerts() {
   const phoneInput = document.getElementById("buyerPhone");
