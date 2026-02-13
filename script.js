@@ -728,6 +728,10 @@ function generateTextReport() {
 }
 
 function exportReport() {
+   if (!adminUnlocked) {
+  alert("⛔ Acesso Negado.\n\nSomente o administrador pode copiar este relatório.");
+  return;
+}
   const report = generateTextReport();
 
   navigator.clipboard.writeText(report).then(() => {
