@@ -956,6 +956,7 @@ function recoverPendingForCurrentBuyer() {
 
 window.addEventListener("load", () => {
   try {
+     captureAffiliateRef();
     // 1) Corrige qualquer lixo/sujeira no raffleData
     if (typeof sanitizeRaffleData === "function") {
       sanitizeRaffleData();
