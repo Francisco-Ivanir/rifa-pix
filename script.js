@@ -741,6 +741,17 @@ function exportReport() {
   });
 }
 
+function captureAffiliateRef() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+
+  if (ref) {
+    const cleanRef = ref.replace(/\D/g, "");
+    if (cleanRef.length >= 10) {
+      localStorage.setItem("affiliateRef", cleanRef);
+    }
+  }
+     }
 /* =========================
    INIT
 ========================= */
