@@ -498,14 +498,18 @@ function openPendingPayment() {
 
 function markAsPending(name, phone, numbersArray) {
   numbersArray.forEach(n => {
-    raffleData.push({
-      number: n,
-      name,
-      phone,
-      status: "pending",
-      time: Date.now(),
-      reminderSent: false
-    });
+    const affiliateRef = localStorage.getItem("affiliateRef") || "";
+
+raffleData.push({
+  number: n,
+  name,
+  phone,
+  status: "pending",
+  time: Date.now(),
+  reminderSent: false,
+  affiliateRef: affiliateRef
+});
+   
 
     const el = document.querySelector(`[data-number="${n}"]`);
     if (el) {
