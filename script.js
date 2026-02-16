@@ -531,7 +531,10 @@ raffleData.push({
 
 function markAsPaid(i) {
   raffleData[i].status = "paid";
-
+// 🎯 sistema de afiliados
+if (raffleData[i].affiliateRef) {
+  addAffiliatePoint(raffleData[i].affiliateRef);
+     }
   // 📊 histórico de pagamento
   initPhoneHistory(raffleData[i].phone);
   const history = getHistory();
