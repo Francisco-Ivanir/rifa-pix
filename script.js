@@ -598,6 +598,7 @@ function renderPanel() {
         Nº ${item.number}<br>
         ${item.name}<br>
         ${item.phone}<br>
+        ${item.affiliateRef ? `<small>🤝 Afiliado: ${item.affiliateRef}</small><br>` : ""}
         ${item.status.toUpperCase()}
         ${timer}
         ${
