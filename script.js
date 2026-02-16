@@ -990,7 +990,41 @@ window.addEventListener("load", () => {
     console.error("❌ Erro ao iniciar sistema:", err);
   }
 });
-     
+
+function getAffiliateData() {
+  return JSON.parse(localStorage.getItem("affiliateData")) || {};
+}
+
+function saveAffiliateData(data) {
+  localStorage.setItem("affiliateData", JSON.stringify(data));
+}
+
+function addAffiliatePoint(ref) {
+  if (!ref) return;
+
+  const data = getAffiliateData();
+
+  if (!data[ref]) {
+    data[ref] = {
+      points: 0,
+      totalPaid: 0,
+      bonuses: 0
+    };
+  }
+
+  data[ref].points += 1;
+  data[ref].totalPaid += 1;
+
+  // 🎁 regra: 10 pontos = 1 bônus
+  if (data[ref].points >= 10) {
+    const bonus = Math.floor(data[ref].points / 10);
+    data[ref].bonuses += bonus;
+    data[ref].points = data[ref].points % 10;
+  }
+
+  saveAffiliateData(data);
+}
+   
 function openAffiliateArea() {
   const phone = localStorage.getItem("currentBuyerPhone");
 
