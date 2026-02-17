@@ -1084,3 +1084,16 @@ function copyAffiliateLink() {
     alert("❌ Não foi possível copiar o link.");
   });
 }
+
+function goAffiliatePanel() {
+  const phone = localStorage.getItem("currentBuyerPhone");
+
+  if (!phone) {
+    alert("⚠️ Para acessar a Área do Afiliado, primeiro informe seu WhatsApp e faça uma reserva.");
+    return;
+  }
+
+  const link = "afiliado.html?tel=" + phone;
+  window.location.href = link;
+       }
+     
