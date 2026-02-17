@@ -337,7 +337,8 @@ function formatTime(ms) {
   }
 
   localStorage.setItem("currentBuyerPhone", phone);
-
+updateAffiliateButton();
+     
   const alreadyTaken = countNumbersByPhone(phone);
   const tryingToTake = selected.length;
 
@@ -967,6 +968,7 @@ window.addEventListener("load", () => {
     if (typeof loadData === "function") {
       loadData();
     }
+updateAffiliateButton();
 
     // 3) Atualiza painel admin
     if (typeof renderPanel === "function") {
