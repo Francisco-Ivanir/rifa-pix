@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Área do Afiliado - Rifa Pix</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 20px auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #111827;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-green {
+      background: #16a34a;
+      color: white;
+    }
+
+    .btn-green:hover {
+      background: #15803d;
+    }
+
+    .box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px;
+      word-break: break-word;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 5px;
+      font-size: 20px;
+      color: #2563eb;
+    }
+
+    .warning {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #9a3412;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>🤝 Área do Afiliado - Rifa Pix</header>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>📱 Identificação do Afiliado</h2>
+      <div class="info">WhatsApp detectado: <span class="highlight" id="affPhone">---</span></div>
+      <div class="info">Status: <span class="highlight" id="affStatus">Carregando...</span></div>
+    </div>
+
+    <div class="card">
+      <h2>🔗 Seu Link de Divulgação</h2>
+
+      <div class="info">
+        Compartilhe esse link com seus amigos. Quando eles comprarem e o ADM confirmar, você ganha pontos.
+      </div>
+
+      <div class="box" id="affLinkBox">---</div>
+
+      <button class="btn btn-primary" onclick="copyAffiliateLink()">
+        📋 Copiar Link
+      </button>
+
+      <button class="btn btn-green" onclick="shareAffiliateLink()">
+        📲 Compartilhar no WhatsApp
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>📊 Seus Resultados</h2>
+
+      <div class="stats">
+        <div class="stat">
+          Pontos
+          <span id="affPoints">0</span>
+        </div>
+
+        <div class="stat">
+          Indicados Pagos
+          <span id="affPaid">0</span>
+        </div>
+
+        <div class="stat">
+          Bônus Ganhos
+          <span id="affBonuses">0</span>
+        </div>
+
+        <div class="stat">
+          Faltam para bônus
+          <span id="affMissing">10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎁 Regras do Programa</h2>
+
+      <div class="warning">
+        ✅ A cada número pago confirmado pelo ADM = <b>+1 ponto</b><br><br>
+        🎉 Ao completar <b>10 pontos</b>, você ganha <b>1 bônus</b>.<br><br>
+        📌 O bônus será entregue pelo administrador (número grátis ou prêmio definido).
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Sistema de Afiliados - Rifa Pix Oficial ©
+  </footer>
+
+  <script>
+    function getAffiliateData() {
+      return JSON.parse(localStorage.getItem("affiliateData")) || {};
+    }
+
+    function getAffiliatePhone() {
+      // pega pelo parâmetro tel ou pelo currentBuyerPhone
+      const params = new URLSearchParams(window.location.search);
+      const tel = params.get("tel");
+
+      if (tel) return tel.replace(/\D/g, "");
+
+      const saved = localStorage.getItem("currentBuyerPhone");
+      return saved ? saved.replace(/\D/g, "") : "";
+    }
+
+    function buildAffiliateLink(phone) {
+      return window.location.origin + window.location.pathname.replace("afiliado.html", "index.html") + "?ref=" + phone;
+    }
+
+    function loadAffiliatePanel() {
+      const phone = getAffiliatePhone();
+      const data = getAffiliateData();
+
+      const affPhone = document.getElementById("affPhone");
+      const affStatus = document.getElementById("affStatus");
+      const affLinkBox = document.getElementById("affLinkBox");
+
+      const affPoints = document.getElementById("affPoints");
+      const affPaid = document.getElementById("affPaid");
+      const affBonuses = document.getElementById("affBonuses");
+      const affMissing = document.getElementById("affMissing");
+
+      if (!phone || phone.length < 10) {
+        affPhone.innerText = "---";
+        affStatus.innerText = "❌ Nenhum WhatsApp identificado";
+        affLinkBox.innerText = "Informe seu WhatsApp comprando pelo site antes.";
+        return;
+      }
+
+      affPhone.innerText = phone;
+      affStatus.innerText = "✅ Afiliado ativo";
+
+      const link = buildAffiliateLink(phone);
+      affLinkBox.innerText = link;
+
+      const affiliate = data[phone] || {
+        points: 0,
+        totalPaid: 0,
+        bonuses: 0
+      };
+
+      affPoints.innerText = affiliate.points;
+      affPaid.innerText = affiliate.totalPaid;
+      affBonuses.innerText = affiliate.bonuses;
+
+      const missing = 10 - affiliate.points;
+      affMissing.innerText = missing;
+    }
+
+    function copyAffiliateLink() {
+      const phone = getAffiliatePhone();
+
+      if (!phone || phone.length < 10) {
+        alert("⚠️ Nenhum WhatsApp encontrado para gerar link.");
+        return;
+      }
+
+      const link = buildAffiliateLink(phone);
+
+      navigator.clipboard.writeText(link).then(() => {
+        alert("✅ Link copiado com sucesso!\n\n" + link);
+      }).catch(() => {
+        alert("❌ Não foi possível copiar.");
+      });
+    }
+
+    function shareAffiliateLink() {
+      const phone = getAffiliatePhone();
+
+      if (!phone || phone.length < 10) {
+        alert("⚠️ Nenhum WhatsApp encontrado para gerar link.");
+        return;
+      }
+
+      const link = buildAffiliateLink(phone);
+
+      const msg =
+        "🔥 Participe da RIFA PIX OFICIAL!\n\n" +
+        "🎟️ Escolha seus números e concorra!\n\n" +
+        "Acesse pelo link:\n" +
+        link;
+
+      window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+    }
+
+    window.addEventListener("load", loadAffiliatePanel);
+  </script>
+
+</body>
+</html>
