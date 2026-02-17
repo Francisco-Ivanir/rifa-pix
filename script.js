@@ -1096,4 +1096,19 @@ function goAffiliatePanel() {
   const link = "afiliado.html?tel=" + phone;
   window.location.href = link;
        }
-     
+
+function updateAffiliateButton() {
+  const btn = document.getElementById("affiliateBtn");
+  if (!btn) return;
+
+  const phone = localStorage.getItem("currentBuyerPhone");
+
+  if (phone && phone.length >= 10) {
+    btn.style.display = "block";
+  } else {
+    btn.style.display = "none";
+  }
+}
+
+
+
