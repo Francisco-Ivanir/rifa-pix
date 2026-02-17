@@ -1063,3 +1063,24 @@ function openAffiliateArea() {
 
   window.open(link, "_blank");
 }
+
+function copyAffiliateLink() {
+  const phone = localStorage.getItem("currentBuyerPhone");
+
+  if (!phone) {
+    alert("⚠️ Primeiro informe seu WhatsApp e finalize uma reserva.");
+    return;
+  }
+
+  const link =
+    window.location.origin +
+    window.location.pathname +
+    "?ref=" +
+    phone;
+
+  navigator.clipboard.writeText(link).then(() => {
+    alert("✅ Link de afiliado copiado!\n\n" + link);
+  }).catch(() => {
+    alert("❌ Não foi possível copiar o link.");
+  });
+}
