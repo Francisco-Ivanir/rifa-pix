@@ -62,6 +62,7 @@
       font-size: 15px;
       font-weight: bold;
       margin-top: 10px;
+      transition: 0.2s;
     }
 
     .btn-primary {
@@ -82,6 +83,15 @@
       background: #15803d;
     }
 
+    .btn-dark {
+      background: #111827;
+      color: white;
+    }
+
+    .btn-dark:hover {
+      background: #0b1220;
+    }
+
     .box {
       background: #f9fafb;
       border: 1px solid #e5e7eb;
@@ -90,6 +100,7 @@
       word-break: break-word;
       font-size: 13px;
       margin-top: 8px;
+      white-space: pre-line;
     }
 
     .stats {
@@ -122,6 +133,22 @@
       border-radius: 10px;
       font-size: 14px;
       color: #9a3412;
+      line-height: 1.4;
+    }
+
+    .textBlock {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+    }
+
+    .textTitle {
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 6px;
+      font-size: 14px;
     }
 
     footer {
@@ -194,9 +221,18 @@
 
       <div class="warning">
         ✅ A cada número pago confirmado pelo ADM = <b>+1 ponto</b><br><br>
-        🎉 Ao completar <b>10 pontos</b>, você ganha <b>1 bônus</b>.<br><br>
-        📌 O bônus será entregue pelo administrador (número grátis ou prêmio definido).
+        🎉 Ao completar <b>10 pontos</b>, você ganha <b>1 bônus</b><br><br>
+        📌 O bônus será entregue pelo administrador (número grátis ou prêmio definido)
       </div>
+    </div>
+
+    <div class="card">
+      <h2>📢 Textos Prontos para Divulgação</h2>
+      <div class="info">
+        Copie um dos textos abaixo e envie junto com seu link.
+      </div>
+
+      <div id="textsArea"></div>
     </div>
 
   </div>
@@ -211,7 +247,6 @@
     }
 
     function getAffiliatePhone() {
-      // pega pelo parâmetro tel ou pelo currentBuyerPhone
       const params = new URLSearchParams(window.location.search);
       const tel = params.get("tel");
 
@@ -222,7 +257,104 @@
     }
 
     function buildAffiliateLink(phone) {
-      return window.location.origin + window.location.pathname.replace("afiliado.html", "index.html") + "?ref=" + phone;
+      return window.location.origin + "/rifa-pix/?ref=" + phone;
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerText;
+        btn.innerText = "✅ Copiado!";
+        btn.disabled = true;
+
+        setTimeout(() => {
+          btn.innerText = original;
+          btn.disabled = false;
+        }, 2000);
+
+      }).catch(() => {
+        alert("❌ Não foi possível copiar.");
+      });
+    }
+
+    function loadAffiliateTexts(link) {
+      const texts = [
+        {
+          title: "Texto 1 (curto e direto)",
+          content:
+`🎟️ RIFA PIX OFICIAL
+💸 Prêmio: PIX R$ 50,00
+💰 Apenas R$ 0,80 por número
+
+👇 Garanta já o seu:
+${link}
+
+🍀 Boa sorte!`
+        },
+        {
+          title: "Texto 2 (mais chamativo)",
+          content:
+`🚨 ATENÇÃO! 🚨
+Saiu a RIFA PIX OFICIAL valendo PIX R$ 50,00 💸🔥
+
+🎟️ Cada número custa só R$ 0,80
+📌 Escolha direto no site e envia automático no WhatsApp
+
+👇 Clique e participe agora:
+${link}
+
+⏳ Corre porque os números são limitados!`
+        },
+        {
+          title: "Texto 3 (para grupos do WhatsApp)",
+          content:
+`📢 RIFA PIX OFICIAL 📢
+
+💰 Prêmio: PIX R$ 50,00
+🎟️ Número: R$ 0,80
+
+📌 Escolha seus números e concorra!
+
+👇 Link para participar:
+${link}
+
+🔥 Quem vai levar esse PIX?`
+        },
+        {
+          title: "Texto 4 (estilo amigo indicando)",
+          content:
+`Falaaa 😄🔥
+
+Tô participando de uma rifa valendo PIX R$ 50,00 e o número é só R$ 0,80.
+
+Se quiser participar também, entra por aqui:
+${link}
+
+🍀 Boa sorte!`
+        }
+      ];
+
+      const area = document.getElementById("textsArea");
+      area.innerHTML = "";
+
+      texts.forEach((t, index) => {
+        const div = document.createElement("div");
+        div.className = "textBlock";
+
+        div.innerHTML = `
+          <div class="textTitle">${t.title}</div>
+          <div class="box" id="textBox${index}">${t.content}</div>
+          <button class="btn btn-dark" id="btnCopy${index}">
+            📋 Copiar Texto
+          </button>
+        `;
+
+        area.appendChild(div);
+
+        setTimeout(() => {
+          const btn = document.getElementById("btnCopy" + index);
+          btn.onclick = () => copyText(t.content, btn);
+        }, 10);
+      });
     }
 
     function loadAffiliatePanel() {
@@ -263,6 +395,9 @@
 
       const missing = 10 - affiliate.points;
       affMissing.innerText = missing;
+
+      // carregar textos prontos
+      loadAffiliateTexts(link);
     }
 
     function copyAffiliateLink() {
@@ -294,8 +429,9 @@
 
       const msg =
         "🔥 Participe da RIFA PIX OFICIAL!\n\n" +
-        "🎟️ Escolha seus números e concorra!\n\n" +
-        "Acesse pelo link:\n" +
+        "🎟️ Prêmio: PIX R$ 50,00\n" +
+        "💰 Número: R$ 0,80\n\n" +
+        "👇 Acesse pelo link:\n" +
         link;
 
       window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
@@ -305,4 +441,5 @@
   </script>
 
 </body>
-</html>
+  </html>
+  
