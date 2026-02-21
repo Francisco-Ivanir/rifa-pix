@@ -532,6 +532,7 @@ raffleData.push({
 
 function markAsPaid(i) {
   raffleData[i].status = "paid";
+   updateAffiliateButton();
 // 🎯 sistema de afiliados
 if (raffleData[i].affiliateRef) {
   addAffiliatePoint(raffleData[i].affiliateRef);
