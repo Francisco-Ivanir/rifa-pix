@@ -1069,22 +1069,26 @@ function openAffiliateArea() {
 
 function copyAffiliateLink() {
   const phone = localStorage.getItem("currentBuyerPhone");
-
   if (!phone) {
-    alert("⚠️ Primeiro informe seu WhatsApp e finalize uma reserva.");
+    alert("⚠️ Informe seu WhatsApp antes de acessar o sistema.");
     return;
   }
 
-  const link =
-    window.location.origin +
-    window.location.pathname +
-    "?ref=" +
-    phone;
+  const reservations = JSON.parse(localStorage.getItem("reservations")) || [];
+
+  const paidCount = reservations.filter(r => 
+    r.phone === phone && r.status === "paid"
+  ).length;
+
+  if (paidCount < 5) {
+    alert("🔒 Para liberar seu link de afiliado você precisa ter no mínimo 5 números pagos confirmados.");
+    return;
+  }
+
+  const link = window.location.origin + window.location.pathname + "?ref=" + phone;
 
   navigator.clipboard.writeText(link).then(() => {
-    alert("✅ Link de afiliado copiado!\n\n" + link);
-  }).catch(() => {
-    alert("❌ Não foi possível copiar o link.");
+    alert("✅ Link copiado com sucesso!");
   });
 }
 
