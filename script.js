@@ -1104,13 +1104,22 @@ function updateAffiliateButton() {
   if (!btn) return;
 
   const phone = localStorage.getItem("currentBuyerPhone");
+  if (!phone) {
+    btn.style.display = "none";
+    return;
+  }
 
-  if (phone && phone.length >= 10) {
+  const reservations = JSON.parse(localStorage.getItem("reservations")) || [];
+
+  const paidCount = reservations.filter(r => 
+    r.phone === phone && r.status === "paid"
+  ).length;
+
+  if (paidCount >= 5) {
     btn.style.display = "block";
   } else {
     btn.style.display = "none";
   }
 }
-
 
 
