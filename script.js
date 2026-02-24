@@ -776,6 +776,17 @@ function openAdmin() {
   }
 }
 
+function openAdminLogin() {
+  const password = prompt("🔐 Acesso restrito\n\nDigite a senha do organizador:");
+
+  if (!password) return;
+
+  if (password === "1234") { // TROQUE AQUI PELA SUA SENHA
+    document.getElementById("adminArea").style.display = "block";
+  } else {
+    alert("❌ Senha incorreta!");
+  }
+}
 function resetRaffle() {
   const pass = prompt("🔒 Digite a senha do administrador para resetar:");
 
