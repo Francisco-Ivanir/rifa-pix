@@ -52,7 +52,7 @@ function initPhoneHistory(phone) {
 function saveData() {
   set(ref(db, "raffleData"), raffleData);
 }
-----------------------------
+
 function loadData() {
 
   const raffleRef = ref(db, "raffleData");
