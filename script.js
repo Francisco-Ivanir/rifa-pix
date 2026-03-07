@@ -49,7 +49,9 @@ function initPhoneHistory(phone) {
    SALVAR / CARREGAR
 ========================= */
 
-
+function saveData() {
+  set(ref(db, "raffleData"), raffleData);
+}
 ----------------------------
 function loadData() {
 
