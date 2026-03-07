@@ -49,33 +49,38 @@ function initPhoneHistory(phone) {
    SALVAR / CARREGAR
 ========================= */
 
-function saveData() {
-  localStorage.setItem("raffleData", JSON.stringify(raffleData));
-}
 
-
+----------------------------
 function loadData() {
-  const data = localStorage.getItem("raffleData");
 
-  if (data) {
-    raffleData = JSON.parse(data);
+  const raffleRef = ref(db, "raffleData");
 
-    raffleData.forEach(item => {
-      const el = document.querySelector(`[data-number="${item.number}"]`);
-      if (!el) return;
+  onValue(raffleRef, (snapshot) => {
 
-      el.classList.add(item.status);
-      el.onclick = null;
-    });
-  }
+    const data = snapshot.val();
 
-  // 🔒 controle do painel
+    if (data) {
+      raffleData = data;
+
+      raffleData.forEach(item => {
+        const el = document.querySelector(`[data-number="${item.number}"]`);
+        if (!el) return;
+
+        el.classList.add(item.status);
+        el.onclick = null;
+      });
+    }
+
+    renderPanel();
+  });
+
+
+  // 🔒 controle do painel continua local
   adminUnlocked = localStorage.getItem("adminUnlocked") === "true";
 
   panel.style.display = adminUnlocked ? "block" : "none";
   adminBtn.style.display = adminUnlocked ? "none" : "block";
 
-  renderPanel();
 }
 
 /* =========================
