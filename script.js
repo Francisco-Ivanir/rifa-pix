@@ -71,6 +71,17 @@ function loadData() {
         el.classList.add(item.status);
         el.onclick = null;
       });
+       const buyerPhone = localStorage.getItem("buyerPhone");
+
+if (buyerPhone) {
+  const pendingNumbers = raffleData.filter(
+    r => r.phone === buyerPhone && r.status === "pending"
+  );
+
+  if (pendingNumbers.length > 0) {
+    showPaymentAlert(pendingNumbers);
+  }
+}
     }
 
     renderPanel();
