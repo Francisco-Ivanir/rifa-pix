@@ -849,8 +849,14 @@ function updatePendingAlerts() {
   const phoneInput = document.getElementById("buyerPhone");
   if (!phoneInput) return;
 
-  const phone = phoneInput.value.replace(/\D/g, "");
-  if (phone.length < 10) return;
+  let phone = phoneInput.value.replace(/\D/g, "");
+
+// se o campo estiver vazio, tenta pegar do localStorage
+if (phone.length < 10) {
+  phone = localStorage.getItem("buyerPhone") || "";
+}
+
+if (phone.length < 10) return;
 
   const pending = getPendingByPhone(phone);
 
