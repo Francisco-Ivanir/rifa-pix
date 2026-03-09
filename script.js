@@ -846,17 +846,20 @@ function resetRaffle() {
 }
 
 function updatePendingAlerts() {
+
   const phoneInput = document.getElementById("buyerPhone");
   if (!phoneInput) return;
 
-  let phone = phoneInput.value.replace(/\D/g, "");
+  // pega primeiro do localStorage
+  let phone = localStorage.getItem("buyerPhone") || "";
 
-// se o campo estiver vazio, tenta pegar do localStorage
-if (phone.length < 10) {
-  phone = localStorage.getItem("buyerPhone") || "";
-}
+  // se digitarem outro telefone, usa o digitado
+  const typedPhone = phoneInput.value.replace(/\D/g, "");
+  if (typedPhone.length >= 10) {
+    phone = typedPhone;
+  }
 
-if (phone.length < 10) return;
+  if (phone.length < 10) return;
 
   const pending = getPendingByPhone(phone);
 
@@ -881,10 +884,7 @@ if (phone.length < 10) return;
   `;
 
   alertBox.innerHTML = msg;
-  // modalAlert.innerHTML = msg;
-
   alertBox.style.display = "block";
-  // modalAlert.style.display = "block";
 }
 
 function checkExpiredPendings() {
