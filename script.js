@@ -850,10 +850,8 @@ function updatePendingAlerts() {
   const phoneInput = document.getElementById("buyerPhone");
   if (!phoneInput) return;
 
-  // pega primeiro do localStorage
   let phone = localStorage.getItem("buyerPhone") || "";
 
-  // se digitarem outro telefone, usa o digitado
   const typedPhone = phoneInput.value.replace(/\D/g, "");
   if (typedPhone.length >= 10) {
     phone = typedPhone;
@@ -861,32 +859,44 @@ function updatePendingAlerts() {
 
   if (phone.length < 10) return;
 
-  const pending = getPendingByPhone(phone);
-
   const alertBox = document.getElementById("pendingAlert");
   const modalAlert = document.getElementById("pendingModalAlert");
 
-  if (!pending) {
+  if (!raffleData || raffleData.length === 0) {
     alertBox.style.display = "none";
-    modalAlert.style.display = "none";
     return;
   }
 
-  const remaining =
-    PENDING_TIME - (Date.now() - pending.time);
+  const pendingNumbers = raffleData.filter(
+    r => r.phone === phone && r.status === "pending"
+  );
+
+  if (pendingNumbers.length === 0) {
+    alertBox.style.display = "none";
+    return;
+  }
+
+  const pending = pendingNumbers[0];
+
+  const remaining = PENDING_TIME - (Date.now() - pending.time);
+
+  if (remaining <= 0) {
+    alertBox.style.display = "none";
+    return;
+  }
 
   const time = formatTime(remaining);
 
   const msg = `
-    ⚠️ Você possui uma reserva pendente
-    <span>⏳ ${time}</span>
-    Finalize o pagamento para liberar novos números.
+  ⚠️ Você possui ${pendingNumbers.length} reserva(s) pendente(s)
+  <span>⏳ ${time}</span>
+  Finalize o pagamento para liberar novos números.
   `;
 
   alertBox.innerHTML = msg;
   alertBox.style.display = "block";
-}
 
+}
 function checkExpiredPendings() {
   const now = Date.now();
   let changed = false;
