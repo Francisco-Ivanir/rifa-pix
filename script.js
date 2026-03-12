@@ -62,7 +62,7 @@ function loadData() {
     const data = snapshot.val();
 
     if (data) {
-      raffleData = data;
+      raffleData = Object.values(data
 
       raffleData.forEach(item => {
         const el = document.querySelector(`[data-number="${item.number}"]`);
