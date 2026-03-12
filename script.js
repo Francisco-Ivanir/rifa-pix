@@ -846,6 +846,7 @@ function resetRaffle() {
 }
 
 function updatePendingAlerts() {
+function updatePendingAlerts() {
 
   const phoneInput = document.getElementById("buyerPhone");
   if (!phoneInput) return;
@@ -860,14 +861,17 @@ function updatePendingAlerts() {
   if (phone.length < 10) return;
 
   const alertBox = document.getElementById("pendingAlert");
-  const modalAlert = document.getElementById("pendingModalAlert");
+  if (!alertBox) return;
 
-  if (!raffleData || raffleData.length === 0) {
+  if (!raffleData) {
     alertBox.style.display = "none";
     return;
   }
 
-  const pendingNumbers = raffleData.filter(
+  // transforma apenas para leitura
+  const list = Object.values(raffleData);
+
+  const pendingNumbers = list.filter(
     r => r.phone === phone && r.status === "pending"
   );
 
@@ -895,8 +899,9 @@ function updatePendingAlerts() {
 
   alertBox.innerHTML = msg;
   alertBox.style.display = "block";
-
 }
+
+   
 function checkExpiredPendings() {
   const now = Date.now();
   let changed = false;
