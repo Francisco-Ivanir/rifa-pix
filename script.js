@@ -847,7 +847,6 @@ function resetRaffle() {
 }
 
 function updatePendingAlerts() {
-function updatePendingAlerts() {
 
   const phoneInput = document.getElementById("buyerPhone");
   if (!phoneInput) return;
