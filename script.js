@@ -847,57 +847,60 @@ function resetRaffle() {
 }
 
 function updatePendingAlerts() {
-
   const phoneInput = document.getElementById("buyerPhone");
-  if (!phoneInput) return;
+  const alertBox = document.getElementById("pendingAlert");
+  const modalAlert = document.getElementById("pendingModalAlert");
+
+  if (!alertBox) return;
 
   let phone = localStorage.getItem("buyerPhone") || "";
 
-  const typedPhone = phoneInput.value.replace(/\D/g, "");
-  if (typedPhone.length >= 10) {
-    phone = typedPhone;
+  if (phoneInput) {
+    const typedPhone = phoneInput.value.replace(/\D/g, "");
+    if (typedPhone.length >= 10) {
+      phone = typedPhone;
+    }
   }
 
-  if (phone.length < 10) return;
-
-  const alertBox = document.getElementById("pendingAlert");
-  if (!alertBox) return;
-
-  if (!raffleData) {
+  if (phone.length < 10) {
     alertBox.style.display = "none";
+    if (modalAlert) modalAlert.style.display = "none";
     return;
   }
 
-  // transforma apenas para leitura
-  const list = Object.values(raffleData);
+  if (!raffleData) {
+    alertBox.style.display = "none";
+    if (modalAlert) modalAlert.style.display = "none";
+    return;
+  }
 
-  const pendingNumbers = list.filter(
+  const pendingNumbers = Object.values(raffleData).filter(
     r => r.phone === phone && r.status === "pending"
   );
 
   if (pendingNumbers.length === 0) {
     alertBox.style.display = "none";
+    if (modalAlert) modalAlert.style.display = "none";
     return;
   }
 
   const pending = pendingNumbers[0];
-
   const remaining = PENDING_TIME - (Date.now() - pending.time);
 
   if (remaining <= 0) {
     alertBox.style.display = "none";
+    if (modalAlert) modalAlert.style.display = "none";
     return;
   }
 
   const time = formatTime(remaining);
 
-  const msg = `
-  ⚠️ Você possui ${pendingNumbers.length} reserva(s) pendente(s)
-  <span>⏳ ${time}</span>
-  Finalize o pagamento para liberar novos números.
+  alertBox.innerHTML = `
+    ⚠️ Você possui ${pendingNumbers.length} reserva(s) pendente(s)
+    <span>⏳ ${time}</span>
+    Finalize o pagamento para liberar novos números.
   `;
 
-  alertBox.innerHTML = msg;
   alertBox.style.display = "block";
 }
 
