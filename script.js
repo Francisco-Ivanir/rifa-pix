@@ -54,47 +54,48 @@ function saveData() {
 }
 
 function loadData() {
-
   const raffleRef = ref(db, "raffleData");
 
   onValue(raffleRef, (snapshot) => {
-
     const data = snapshot.val();
 
     if (data) {
       raffleData = data;
 
-      raffleData.forEach(item => {
+      Object.values(raffleData).forEach(item => {
         const el = document.querySelector(`[data-number="${item.number}"]`);
         if (!el) return;
 
+        el.classList.remove("available", "reserved", "pending", "paid");
         el.classList.add(item.status);
         el.onclick = null;
       });
-       const buyerPhone = localStorage.getItem("buyerPhone");
 
-if (buyerPhone) {
-  const pendingNumbers = raffleData.filter(
-    r => r.phone === buyerPhone && r.status === "pending"
-  );
+      const buyerPhone = localStorage.getItem("buyerPhone") || "";
 
-  if (pendingNumbers.length > 0) {
-    showPaymentAlert(pendingNumbers);
-  }
-}
+      if (buyerPhone) {
+        const pendingNumbers = Object.values(raffleData).filter(
+          r => r.phone === buyerPhone && r.status === "pending"
+        );
+
+        if (pendingNumbers.length > 0) {
+          showPaymentAlert(pendingNumbers);
+        }
+      }
     }
 
     renderPanel();
-     updatePendingAlerts();
-  });
 
+    setTimeout(() => {
+      updatePendingAlerts();
+    }, 300);
+  });
 
   // 🔒 controle do painel continua local
   adminUnlocked = localStorage.getItem("adminUnlocked") === "true";
 
   panel.style.display = adminUnlocked ? "block" : "none";
   adminBtn.style.display = adminUnlocked ? "none" : "block";
-
 }
 
 /* =========================
