@@ -853,20 +853,20 @@ function updatePendingAlerts() {
 
   if (!alertBox) return;
 
-  let phone = localStorage.getItem("buyerPhone") || "";
+  let phone = localStorage.getItem("buyerPhone");
 
-  if (phoneInput) {
-    const typedPhone = phoneInput.value.replace(/\D/g, "");
-    if (typedPhone.length >= 10) {
-      phone = typedPhone;
-    }
+if (!phone && phoneInput) {
+  const typedPhone = phoneInput.value.replace(/\D/g, "");
+  if (typedPhone.length >= 10) {
+    phone = typedPhone;
   }
+}
 
-  if (phone.length < 10) {
-    alertBox.style.display = "none";
-    if (modalAlert) modalAlert.style.display = "none";
-    return;
-  }
+if (!phone) {
+  alertBox.style.display = "none";
+  if (modalAlert) modalAlert.style.display = "none";
+  return;
+}
 
   if (!raffleData) {
     alertBox.style.display = "none";
