@@ -874,9 +874,12 @@ if (!phone) {
     return;
   }
 
-  const pendingNumbers = Object.values(raffleData).filter(
-    r => r.phone === phone && r.status === "pending"
-  );
+  const cleanPhone = phone.replace(/\D/g, "");
+
+const pendingNumbers = Object.values(raffleData).filter(r => {
+  const dbPhone = (r.phone || "").replace(/\D/g, "");
+  return dbPhone === cleanPhone && r.status === "pending";
+});
 
   if (pendingNumbers.length === 0) {
     alertBox.style.display = "none";
