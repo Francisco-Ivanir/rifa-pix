@@ -1184,4 +1184,9 @@ function updateAffiliateButton() {
   }
 }
 
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    updatePendingAlerts();
+  }, 500);
+});
 
