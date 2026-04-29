@@ -847,6 +847,10 @@ function resetRaffle() {
 }
 
 function updatePendingAlerts() {
+console.log("Rodando alerta...");
+console.log("Telefone salvo:", localStorage.getItem("buyerPhone"));
+console.log("Dados Firebase:", raffleData);
+   
   const phoneInput = document.getElementById("buyerPhone");
   const alertBox = document.getElementById("pendingAlert");
   const modalAlert = document.getElementById("pendingModalAlert");
