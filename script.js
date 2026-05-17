@@ -518,6 +518,7 @@ function openPendingPayment() {
 }
 
 function markAsPending(name, phone, numbersArray) {
+   localStorage.setItem("buyerPhone", phone.replace(/\D/g, ""));
   numbersArray.forEach(n => {
     const affiliateRef = localStorage.getItem("affiliateRef") || "";
 
