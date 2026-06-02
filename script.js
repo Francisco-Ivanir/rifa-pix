@@ -63,36 +63,11 @@ function loadData() {
       raffleData = data;
 
       Object.values(raffleData).forEach(item => {
-
-  console.log("Lendo item:", item);
-
-  const el = document.querySelector(
-    `[data-number="${item.number}"]`
-  );
-
-  console.log(
-    "Número:",
-    item.number,
-    "Elemento:",
-    el
-  );
-
+  const el = document.querySelector(`[data-number="${item.number}"]`);
   if (!el) return;
 
-  el.classList.remove(
-    "available",
-    "reserved",
-    "pending",
-    "paid"
-  );
-
+  el.classList.remove("available", "reserved", "pending", "paid");
   el.classList.add(item.status);
-
-  console.log(
-    "Classe aplicada:",
-    item.status
-  );
-
   el.onclick = null;
 });
 
