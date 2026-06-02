@@ -64,7 +64,11 @@ function loadData() {
 
       Object.values(raffleData).forEach(item => {
   const el = document.querySelector(`[data-number="${item.number}"]`);
-  if (!el) return;
+
+if (!el) {
+  alert("NÃO ENCONTROU O NÚMERO: " + item.number);
+  return;
+}
 
   el.classList.remove("available", "reserved", "pending", "paid");
   el.classList.add(item.status);
