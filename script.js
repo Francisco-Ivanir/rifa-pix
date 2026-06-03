@@ -72,6 +72,11 @@ if (!el) {
 
   el.classList.remove("available", "reserved", "pending", "paid");
   el.classList.add(item.status);
+
+alert(
+  "Número: " + item.number +
+  "\nStatus: " + item.status
+);
   el.onclick = null;
 });
 
