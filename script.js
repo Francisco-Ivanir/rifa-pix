@@ -58,7 +58,7 @@ function loadData() {
 
   onValue(raffleRef, (snapshot) => {
     const data = snapshot.val();
-
+alert("LOADDATA EXECUTOU");
     if (data) {
       raffleData = data;
 
