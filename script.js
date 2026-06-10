@@ -1018,6 +1018,7 @@ window.addEventListener("load", () => {
 
     // 2) Carrega dados salvos
     if (typeof loadData === "function") {
+       alert("VOU CHAMAR LOADDATA");
       loadData();
     }
 updateAffiliateButton();
