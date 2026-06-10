@@ -58,6 +58,8 @@ function loadData() {
 
   onValue(raffleRef, (snapshot) => {
     const data = snapshot.val();
+     alert("Dados recebidos: " + JSON.stringify(data));
+     
     if (data) {
       raffleData = data;
 
