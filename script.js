@@ -977,24 +977,8 @@ function checkExpiredPendings() {
 }
 
 function sanitizeRaffleData() {
-  const now = Date.now();
-
-  const saved = localStorage.getItem("raffleData");
-  if (!saved) return;
-
-  raffleData = JSON.parse(saved);
-
-  raffleData = raffleData.filter(item => {
-    if (item.status !== "pending") return true;
-
-    if (!item.time) return false;
-
-    if (now - item.time > PENDING_TIME) return false;
-
-    return true;
-  });
-
-  saveData();
+  // Firebase já é a fonte oficial dos dados.
+  // Mantido vazio para não sobrescrever raffleData.
 }
 
 function recoverPendingForCurrentBuyer() {
