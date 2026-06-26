@@ -59,9 +59,9 @@ function loadData() {
   "\nref: " + (window.ref ? "OK" : "UNDEFINED") +
   "\nonValue: " + (window.onValue ? "OK" : "UNDEFINED")
 );
-  const raffleRef = ref(db, "raffleData");
+  const raffleRef = window.ref(window.db, "raffleData");
 
-  onValue(raffleRef, (snapshot) => {
+window.onValue(raffleRef, (snapshot) => {
     const data = snapshot.val();
      alert("Dados recebidos: " + JSON.stringify(data));
      
