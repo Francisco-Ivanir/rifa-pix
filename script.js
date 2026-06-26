@@ -54,6 +54,11 @@ function saveData() {
 }
 
 function loadData() {
+   alert(
+  "db: " + (window.db ? "OK" : "UNDEFINED") +
+  "\nref: " + (window.ref ? "OK" : "UNDEFINED") +
+  "\nonValue: " + (window.onValue ? "OK" : "UNDEFINED")
+);
   const raffleRef = ref(db, "raffleData");
 
   onValue(raffleRef, (snapshot) => {
