@@ -54,17 +54,21 @@ function saveData() {
 }
 
 function loadData() {
-   alert(
-  "db: " + (window.db ? "OK" : "UNDEFINED") +
-  "\nref: " + (window.ref ? "OK" : "UNDEFINED") +
-  "\nonValue: " + (window.onValue ? "OK" : "UNDEFINED")
-);
+
+  alert("V2.1 - loadData iniciou");
+
   const raffleRef = window.ref(window.db, "raffleData");
 
-window.onValue(raffleRef, (snapshot) => {
+  alert("V2.1 - referência criada");
+
+  window.onValue(raffleRef, (snapshot) => {
+
+    alert("V2.1 - onValue disparou");
+
     const data = snapshot.val();
-     alert("Dados recebidos: " + JSON.stringify(data));
-     
+
+    alert("V2.1 - dados recebidos");
+
     if (data) {
       raffleData = data;
 
