@@ -56,7 +56,10 @@ function saveData() {
 function loadData() {
 
   alert("V2.1 - loadData iniciou");
-
+   
+alert("db = " + typeof window.db);
+alert("ref = " + typeof window.ref);
+alert("onValue = " + typeof window.onValue);
   const raffleRef = window.ref(window.db, "raffleData");
 
   alert("V2.1 - referência criada");
