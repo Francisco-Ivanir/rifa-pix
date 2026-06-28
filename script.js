@@ -54,37 +54,24 @@ function saveData() {
 }
 
 function loadData() {
-
-  alert("V2.1 - loadData iniciou");
-   
-alert("db = " + typeof window.db);
-alert("ref = " + typeof window.ref);
-alert("onValue = " + typeof window.onValue);
   const raffleRef = window.ref(window.db, "raffleData");
-
-  alert("V2.1 - referência criada");
    
 window.get(raffleRef)
   .then((snapshot) => {
-    alert("GET FUNCIONOU");
 
     if (snapshot.exists()) {
-      alert("DADOS EXISTEM");
+      
     } else {
-      alert("SEM DADOS");
+      
     }
   })
   .catch((err) => {
-    alert("ERRO GET: " + err.message);
+    
   });
    
   window.onValue(raffleRef, (snapshot) => {
 
-    alert("V2.1 - onValue disparou");
-
     const data = snapshot.val();
-
-    alert("V2.1 - dados recebidos");
 
     if (data) {
       raffleData = data;
