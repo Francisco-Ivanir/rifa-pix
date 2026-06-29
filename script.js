@@ -510,18 +510,30 @@ window.open(
 /* =========================
    PENDENTE / PAGO
 ========================= */
-function openPendingPayment() {
+ function openPendingPayment() {
+
+  alert("1 - Entrou na função");
+
   const phone =
-  localStorage.getItem("buyerPhone") ||
-  localStorage.getItem("currentBuyerPhone") ||
-  "";
-   
-  if (phone.length < 10) return;
+    localStorage.getItem("buyerPhone") ||
+    localStorage.getItem("currentBuyerPhone") ||
+    "";
+
+  alert("2 - Telefone: " + phone);
+
+  if (phone.length < 10) {
+    alert("3 - Telefone inválido");
+    return;
+  }
 
   const pending = getPendingByPhone(phone);
+
+  alert("4 - Pending encontrado: " + (pending ? "SIM" : "NÃO"));
+
   if (!pending) return;
 
-  // abre modal SEM exigir selected[]
+  alert("5 - Vai abrir modal");
+
   modal.style.display = "flex";
 
   buyerForm.style.display = "none";
