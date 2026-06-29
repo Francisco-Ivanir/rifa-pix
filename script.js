@@ -511,7 +511,11 @@ window.open(
    PENDENTE / PAGO
 ========================= */
 function openPendingPayment() {
-  const phone = localStorage.getItem("currentBuyerPhone") || "";
+  const phone =
+  localStorage.getItem("buyerPhone") ||
+  localStorage.getItem("currentBuyerPhone") ||
+  "";
+   
   if (phone.length < 10) return;
 
   const pending = getPendingByPhone(phone);
