@@ -922,10 +922,12 @@ const pendingNumbers = Object.values(raffleData).filter(r => {
   const time = formatTime(remaining);
 
   alertBox.innerHTML = `
-    ⚠️ Você possui ${pendingNumbers.length} reserva(s) pendente(s)
-    <span>⏳ ${time}</span>
-    Finalize o pagamento para liberar novos números.
-  `;
+  ⚠️ Você possui ${pendingNumbers.length} reserva(s) pendente(s)
+  <span>⏳ ${time}</span>
+  <strong style="text-decoration:underline">
+    Clique aqui para finalizar o pagamento
+  </strong>
+`;
 
   alertBox.style.display = "block";
 }
