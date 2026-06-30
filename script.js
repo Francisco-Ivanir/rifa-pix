@@ -375,6 +375,7 @@ function formatTime(ms) {
   }
 
   localStorage.setItem("currentBuyerPhone", phone);
+    localStorage.setItem("buyerPhone", phone);
 updateAffiliateButton();
      
   const alreadyTaken = countNumbersByPhone(phone);
@@ -914,13 +915,12 @@ if (!phone) {
   }
 
   const cleanPhone = phone.replace(/\D/g, "");
-alert("Telefone localStorage: " + cleanPhone);
-console.log("raffleData completo:", raffleData);
+
 const pendingNumbers = Object.values(raffleData).filter(r => {
   const dbPhone = (r.phone || "").replace(/\D/g, "");
   return dbPhone === cleanPhone && r.status === "pending";
 });
-   console.log("Pendências encontradas:", pendingNumbers);
+  
   if (pendingNumbers.length === 0) {
     alertBox.style.display = "none";
     if (modalAlert) modalAlert.style.display = "none";
