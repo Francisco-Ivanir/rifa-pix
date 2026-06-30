@@ -893,7 +893,14 @@ console.log("Dados Firebase:", raffleData);
 
   if (!alertBox) return;
 
-  let phone = localStorage.getItem("buyerPhone");
+ let phone = localStorage.getItem("currentBuyerPhone");
+
+alert(
+  "buyerPhone = " +
+  localStorage.getItem("buyerPhone") +
+  "\n\ncurrentBuyerPhone = " +
+  localStorage.getItem("currentBuyerPhone")
+);
 
 if (!phone && phoneInput) {
   const typedPhone = phoneInput.value.replace(/\D/g, "");
