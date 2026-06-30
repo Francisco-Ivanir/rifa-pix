@@ -914,12 +914,13 @@ if (!phone) {
   }
 
   const cleanPhone = phone.replace(/\D/g, "");
-
+console.log("Telefone localStorage:", cleanPhone);
+console.log("raffleData completo:", raffleData);
 const pendingNumbers = Object.values(raffleData).filter(r => {
   const dbPhone = (r.phone || "").replace(/\D/g, "");
   return dbPhone === cleanPhone && r.status === "pending";
 });
-   
+   console.log("Pendências encontradas:", pendingNumbers);
   if (pendingNumbers.length === 0) {
     alertBox.style.display = "none";
     if (modalAlert) modalAlert.style.display = "none";
