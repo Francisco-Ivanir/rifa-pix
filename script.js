@@ -914,7 +914,7 @@ if (!phone) {
   }
 
   const cleanPhone = phone.replace(/\D/g, "");
-console.log("Telefone localStorage:", cleanPhone);
+alert("Telefone localStorage: " + cleanPhone);
 console.log("raffleData completo:", raffleData);
 const pendingNumbers = Object.values(raffleData).filter(r => {
   const dbPhone = (r.phone || "").replace(/\D/g, "");
