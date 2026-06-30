@@ -921,11 +921,16 @@ const pendingNumbers = Object.values(raffleData).filter(r => {
   return dbPhone === cleanPhone && r.status === "pending";
 });
   
-  if (pendingNumbers.length === 0) {
-    alertBox.style.display = "none";
-    if (modalAlert) modalAlert.style.display = "none";
-    return;
-  }
+  alert(
+  "Pendências: " + pendingNumbers.length +
+  "\nTelefone usado: " + cleanPhone
+);
+
+if (pendingNumbers.length === 0) {
+  alertBox.style.display = "none";
+  if (modalAlert) modalAlert.style.display = "none";
+  return;
+}
 
   const pending = pendingNumbers[0];
   const remaining = PENDING_TIME - (Date.now() - pending.time);
