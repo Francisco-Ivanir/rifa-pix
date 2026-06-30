@@ -919,11 +919,6 @@ const pendingNumbers = Object.values(raffleData).filter(r => {
   const dbPhone = (r.phone || "").replace(/\D/g, "");
   return dbPhone === cleanPhone && r.status === "pending";
 });
-
-   alert(
-  "Pendências encontradas: " +
-  pendingNumbers.length
-);
    
   if (pendingNumbers.length === 0) {
     alertBox.style.display = "none";
