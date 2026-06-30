@@ -920,6 +920,11 @@ const pendingNumbers = Object.values(raffleData).filter(r => {
   return dbPhone === cleanPhone && r.status === "pending";
 });
 
+   alert(
+  "Pendências encontradas: " +
+  pendingNumbers.length
+);
+   
   if (pendingNumbers.length === 0) {
     alertBox.style.display = "none";
     if (modalAlert) modalAlert.style.display = "none";
