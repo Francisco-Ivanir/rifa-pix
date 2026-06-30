@@ -915,7 +915,13 @@ if (!phone) {
   }
 
   const cleanPhone = phone.replace(/\D/g, "");
-
+alert(
+  JSON.stringify(
+    Object.values(raffleData)[0],
+    null,
+    2
+  )
+);
 const pendingNumbers = Object.values(raffleData).filter(r => {
   const dbPhone = (r.phone || "").replace(/\D/g, "");
   return dbPhone === cleanPhone && r.status === "pending";
